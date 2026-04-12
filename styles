@@ -32,12 +32,10 @@ body, html {
 }
 
 .wayshrine-container {
-    background-image: url('ProjectKore.png');
+    background-image: url('ProjectKore.png') !important;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     width: 100vw;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
