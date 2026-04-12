@@ -12,16 +12,23 @@ window.onload = function() {
     }, 3000); 
 };
 
-// 2. The "Agency" Logic: This allows the user to kill the effect instantly
+window.onload = function() {
+    setTimeout(() => {
+        const layer = document.getElementById('somatic-layer');
+        if (layer) {
+            layer.classList.add('active');
+        }
+    }, 3000); 
+};
+
 function dismissHijack(event) {
-    // This stops the click from "bubbling" up and accidentally re-triggering the room
     if (event) event.stopPropagation(); 
-    
     const layer = document.getElementById('somatic-layer');
     if (layer) {
         layer.classList.remove('active');
-        console.log("User exercised Agency: Hijack Disengaged.");
+        console.log("Agency exercised. Companion standing by.");
     }
+}
 }
 
 // 3. The "Manual Toggle" Logic: For testing purposes if you click the desk
