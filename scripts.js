@@ -1,55 +1,54 @@
 let heartbeatInterval;
 
-// 1. The "Observer" Logic
 window.onload = function() {
-    console.log("Companion is observing... initiating sanctuary in 3 seconds.");
-    
+    // Auto-start after 3 seconds
     setTimeout(() => {
-        const layer = document.getElementById('somatic-layer');
-        if (layer) {
-            layer.classList.add('active');
-            startHeartbeat(); // Start the vibration
-            console.log("Somatic Hijack: Engaged. Heartbeat Active.");
-        }
+        engageSanctuary();
     }, 3000); 
 };
 
-// 2. The Vagal Heartbeat (60 BPM)
+function engageSanctuary() {
+    const layer = document.getElementById('somatic-layer');
+    if (layer && !layer.classList.contains('active')) {
+        layer.classList.add('active');
+        startHeartbeat();
+        console.log("Sanctuary Engaged");
+    }
+}
+
+function dismissHijack(event) {
+    if (event) event.stopPropagation(); 
+    const layer = document.getElementById('somatic-layer');
+    if (layer) {
+        layer.classList.remove('active');
+        stopHeartbeat();
+        console.log("Sanctuary Dismissed");
+    }
+}
+
 function startHeartbeat() {
-    // Only trigger if the device supports vibration
     if ("vibrate" in navigator) {
-        // Pulse for 200ms, pause for 800ms
+        // Clear any old ones first
+        clearInterval(heartbeatInterval);
         heartbeatInterval = setInterval(() => {
             navigator.vibrate(200); 
         }, 1000);
     }
 }
 
-// 3. The "Agency" Logic
-function dismissHijack(event) {
-    if (event) event.stopPropagation(); 
-    
-    const layer = document.getElementById('somatic-layer');
-    if (layer) {
-        layer.classList.remove('active');
-        
-        // Stop the heartbeat immediately
-        clearInterval(heartbeatInterval);
-        if ("vibrate" in navigator) navigator.vibrate(0);
-        
-        console.log("Agency exercised. Heartbeat silenced.");
-    }
+function stopHeartbeat() {
+    clearInterval(heartbeatInterval);
+    if ("vibrate" in navigator) navigator.vibrate(0);
 }
 
-// 4. Manual Toggle
+// This allows you to click the desk to bring it back
 function triggerSomaticHijack() {
     const layer = document.getElementById('somatic-layer');
     if (layer) {
         if (layer.classList.contains('active')) {
-            dismissHijack();
+            // If it's on, don't do anything (let the X handle it)
         } else {
-            layer.classList.add('active');
-            startHeartbeat();
+            engageSanctuary();
         }
     }
 }
