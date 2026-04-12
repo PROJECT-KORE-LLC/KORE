@@ -15,3 +15,12 @@ function triggerSomaticHijack() {
         }
     }
 }
+function triggerSomaticHijack() {
+    const layer = document.getElementById('somatic-layer');
+    
+    // Check if the layer exists, then toggle the 'active' class
+    if (layer) {
+        layer.classList.toggle('active');
+        console.log("Somatic Hijack Toggled");
+    }
+}
