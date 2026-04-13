@@ -1,4 +1,4 @@
-// 1. Wire the button on load
+// --- 1. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
@@ -11,7 +11,7 @@ let heartbeatInterval;
 let recognition; 
 let isSanctuaryActive = false;
 
-// --- THE VOICE ENGINE UPGRADE ---
+// --- 2. THE VOICE ENGINE ---
 let synth = window.speechSynthesis; 
 let paxVoice = null;
 
@@ -25,7 +25,6 @@ function loadPremiumVoices() {
                availableVoices.find(v => v.name.includes("Fiona")) || 
                availableVoices.find(v => v.lang === 'en-GB') || 
                availableVoices[0]; 
-    console.log("🗣️ PAX Voice Selected: " + paxVoice.name);
 }
 
 loadPremiumVoices();
@@ -36,7 +35,6 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
 window.paxUtterances = []; 
 
 function paxSpeak(text, isExit = false) {
-    // If she is talking, instantly cut her off so your new command works
     if (synth.speaking) synth.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
@@ -51,43 +49,14 @@ function paxSpeak(text, isExit = false) {
 
     utterance.onend = function () {
         if (audio && isSanctuaryActive) audio.volume = 0.5;
-        
-        // THE CRITICAL FIX: Wake the mic back up immediately after she finishes talking!
         if (!isExit && isSanctuaryActive && recognition) {
-            try { recognition.start(); console.log("🎙️ PAX finished. Mic awake."); } catch(e) {}
+            try { recognition.start(); } catch(e) {}
         }
     };
-
     synth.speak(utterance);
-// --- THE LORE DISCOVERY ENGINE ---
-function triggerLore(event) {
-    // 1. This is the command that blocks the background panic trigger!
-    if (event) event.stopPropagation(); 
-    
-    const shard = document.getElementById('lore-shard');
-    const banner = document.getElementById('lore-banner');
-    const audio = document.getElementById('sanctuary-audio');
-
-    // 2. Hide the shard (They collected it!)
-    if (shard) {
-        shard.style.transform = "scale(3) rotate(45deg)";
-        shard.style.opacity = "0";
-        setTimeout(() => { shard.style.display = 'none'; }, 500);
-    }
-
-    // 3. Drop the notification banner
-    if (banner) {
-        banner.classList.add('active');
-        // Hide banner after 6 seconds
-        setTimeout(() => { banner.classList.remove('active'); }, 6000);
-    }
-
-    // 4. Duck the audio and have PAX tell the story
-    if (audio) { audio.volume = 0.5; audio.play().catch(e => {}); }
-    
-    paxSpeak("You found a fragment of the Old Road. Before the noise consumed the world, the Architects built these Wayshrines as lighthouses for the mind. As long as this fire burns, the dark cannot claim you.", false);
 }
 
+// --- 3. CORE LOGIC ---
 function initializeEngine() {
     console.log("🚀 KORE Engine Initializing...");
 
@@ -107,89 +76,69 @@ function initializeEngine() {
         recognition.continuous = false; 
         recognition.interimResults = false; 
         
-        recognition.onstart = function() { console.log("🎙️ PAX IS LISTENING..."); };
-
-      recognition.onresult = function(event) {
+        recognition.onresult = function(event) {
             let transcript = Array.from(event.results).map(r => r[0].transcript).join('').toLowerCase();
-            console.log("🧠 Mic heard: ", transcript); 
-            
             const vocalDisplay = document.getElementById('hud-vocal');
 
-            // 1. THE DISENGAGE TETHER (The Killswitch)
+            // INTENT ROUTER
             if (transcript.includes("pax") || transcript.includes("safe") || transcript.includes("stop") || transcript.includes("good") || transcript.includes("okay")) {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>TETHER CONFIRMED.</span>";
                 dismissHijack(); 
-                paxSpeak("Tether confirmed. I am with you. Logging your recovery.", true); 
+                paxSpeak("Tether confirmed. I am with you.", true); 
             } 
-            
-            // 2. SEVERE PHYSICAL DISTRESS (Panic Attack Symptoms)
             else if (transcript.includes("can't breathe") || transcript.includes("heart") || transcript.includes("dying") || transcript.includes("chest")) {
-                if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>SOMATIC OVERLOAD DETECTED.</span>";
-                paxSpeak("Your body is sounding an alarm, but you are not in danger. Match your breathing to my light. Inhale. Exhale.");
+                if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>OVERLOAD DETECTED.</span>";
+                paxSpeak("Your body is sounding an alarm, but you are not in danger. Breathe with my light.");
             }
-            
-            // 3. EMOTIONAL FLOODING & VALIDATION
             else if (transcript.includes("crazy") || transcript.includes("too much") || transcript.includes("overwhelmed") || transcript.includes("scared")) {
-                if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>EMOTIONAL FLOODING DETECTED.</span>";
-                paxSpeak("You are not broken. This is just a wave, and waves pass. I will hold the light until it does.");
+                if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>FLOODING DETECTED.</span>";
+                paxSpeak("You are not broken. This is just a wave, and waves pass.");
             }
-
-            // 4. THE GROUNDING TECHNIQUE (Clinical distraction)
-            else if (transcript.includes("help") || transcript.includes("ground me") || transcript.includes("distract")) {
-                if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>INITIATING GROUNDING PROTOCOL.</span>";
-                paxSpeak("Look around the room. Tell me the name of one physical object you can see right now.");
+            else if (transcript.includes("help") || transcript.includes("ground me")) {
+                if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>GROUNDING PROTOCOL.</span>";
+                paxSpeak("Look around the room. Tell me the name of one physical object you can see.");
             }
-
-            // 5. WORLD-BUILDING & LORE (The Gamer Hook)
-            else if (transcript.includes("where are we") || transcript.includes("what is this") || transcript.includes("wayshrine")) {
+            else if (transcript.includes("where are we") || transcript.includes("what is this") || transcript.includes("hearth")) {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>ENVIRONMENT QUERY.</span>";
-                paxSpeak("This is the Wayshrine. A quiet place between the noise. Nothing can reach you here.");
+                paxSpeak("This is the Hearth. A quiet place between the noise. Nothing can reach you here.");
             }
-
-            // 6. THE ARCHITECT EASTER EGG (Pitch Meeting Flex)
             else if (transcript.includes("vanguard") || transcript.includes("kore")) {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>ADMIN RECOGNIZED.</span>";
                 paxSpeak("Project Kore Vanguard Engine operating at optimal capacity. Awaiting your command, Architect.");
             }
-
-            // 7. DEFAULT FALLBACK
             else {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>ANALYZING...</span>";
                 paxSpeak("I am listening. Keep breathing.");
             }
         };
-        recognition.onerror = function(event) { console.error("❌ MIC ERROR: ", event.error); };
-        
+
         recognition.onend = function() {
-            // Only fall back to this if she isn't talking
             if (isSanctuaryActive && recognition && !synth.speaking) {
                 try { recognition.start(); } catch(e) {}
             }
         };
     } else {
-        console.error("❌ Web Speech API NOT supported on this browser.");
+        console.error("❌ Web Speech API NOT supported.");
     }
 }
 
 function engageSanctuary() {
     const layer = document.getElementById('somatic-layer');
-    const wayshrine = document.querySelector('.wayshrine-container'); 
+    const hearth = document.querySelector('.hearth-container'); 
     const audio = document.getElementById('sanctuary-audio');
     
     if (layer && !layer.classList.contains('active')) {
         isSanctuaryActive = true;
         layer.classList.add('active');
-        if (wayshrine) wayshrine.classList.add('breathing'); 
+        if (hearth) hearth.classList.add('breathing'); 
         
         startHeartbeat();
         runTelemetrySimulation(); 
         
         if (audio) { audio.volume = 0.5; audio.play().catch(e => console.error(e)); } 
         
-        // Start the intro sequence
         setTimeout(() => {
             paxSpeak("Sanctuary protocol engaged. Speak to me.");
-            // Force the mic on after she starts her intro
             setTimeout(() => { if (recognition) { try { recognition.start(); } catch(e) {} } }, 2000);
         }, 1500);
     }
@@ -199,29 +148,25 @@ function dismissHijack(event) {
     if (event) event.stopPropagation(); 
     const layer = document.getElementById('somatic-layer');
     const audio = document.getElementById('sanctuary-audio');
-    const wayshrine = document.querySelector('.wayshrine-container');
+    const hearth = document.querySelector('.hearth-container');
     const summary = document.getElementById('session-summary'); 
     
     if (layer) {
         clearInterval(bpmInterval); 
-        if (wayshrine) wayshrine.classList.remove('breathing');
-        
-        // Immediately shut off the mic so it doesn't accidentally trigger again
+        if (hearth) hearth.classList.remove('breathing');
         if (recognition) { try { recognition.stop(); } catch(e) {} }
-        isSanctuaryActive = false; // Flags the whole system to stop looping
+        isSanctuaryActive = false; 
 
-        // Wait 1 second so she can say "Tether confirmed", then fade everything out
         setTimeout(() => {
             layer.classList.remove('active');
             stopHeartbeat();
             if (audio) { audio.pause(); audio.currentTime = 0; }
-            
-            // Drop the frosted glass summary screen!
             if (summary) summary.classList.add('active');
         }, 1000);
     }
 }
 
+// --- 4. HARDWARE & UTILS ---
 function startHeartbeat() {
     if ("vibrate" in navigator) {
         clearInterval(heartbeatInterval);
@@ -244,6 +189,29 @@ function closeSummary() {
     if (summary) summary.classList.remove('active');
 }
 
+// --- 5. LORE ENGINE ---
+function triggerLore(event) {
+    if (event) event.stopPropagation(); 
+    
+    const shard = document.getElementById('lore-shard');
+    const banner = document.getElementById('lore-banner');
+    const audio = document.getElementById('sanctuary-audio');
+
+    if (shard) {
+        shard.style.transform = "scale(3) rotate(45deg)";
+        shard.style.opacity = "0";
+        setTimeout(() => { shard.style.display = 'none'; }, 500);
+    }
+    if (banner) {
+        banner.classList.add('active');
+        setTimeout(() => { banner.classList.remove('active'); }, 6000);
+    }
+    if (audio) { audio.volume = 0.5; audio.play().catch(e => {}); }
+    
+    paxSpeak("You found a fragment of the Old Road. Before the noise consumed the world, the Architects built these Hearths as lighthouses for the mind. As long as this fire burns, the dark cannot claim you.", false);
+}
+
+// --- 6. TELEMETRY SIMULATION ---
 let bpmInterval;
 function runTelemetrySimulation() {
     const bpmDisplay = document.getElementById('hud-bpm');
