@@ -1,15 +1,16 @@
-// --- 1. INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', () => {
-    const startBtn = document.getElementById('start-btn');
-    if (startBtn) {
-        startBtn.addEventListener('click', initializeEngine);
-        console.log("✅ Hearth Protocol Wired.");
-    }
-});
-
+// --- 1. INITIALIZATION & PORTAL LOGIC ---
 let heartbeatInterval;
 let recognition; 
 let isSanctuaryActive = false;
+let bpmInterval;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const enterBtn = document.getElementById('enter-btn');
+    if (enterBtn) {
+        enterBtn.addEventListener('click', initializeEngine);
+        console.log("✅ Hearth Portal Wired.");
+    }
+});
 
 // --- 2. THE VOICE ENGINE ---
 let synth = window.speechSynthesis; 
@@ -49,17 +50,23 @@ function paxSpeak(text, isExit = false) {
     synth.speak(utterance);
 }
 
-// --- 3. CORE LOGIC ---
+// --- 3. CORE LOGIC (Dropping the Wall) ---
 function initializeEngine() {
+    // 1. Fade out the beautiful new portal
     const intro = document.getElementById('intro-screen');
     if (intro) {
-        intro.classList.remove('active');
-        setTimeout(() => { intro.style.display = 'none'; }, 1000);
+        intro.classList.add('hidden');
+        setTimeout(() => { intro.style.display = 'none'; }, 1500); 
     }
 
+    // 2. Load the fire audio
     const audio = document.getElementById('sanctuary-audio');
     if (audio) audio.load(); 
 
+    // 3. Optional: PAX welcomes you to the engine
+    setTimeout(() => { paxSpeak("Welcome to the Hearth."); }, 1500);
+
+    // 4. Prime the Speech Recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
@@ -172,7 +179,6 @@ function triggerInvestorTour() {
 }
 
 // --- 7. TELEMETRY SIMULATION ---
-let bpmInterval;
 function runTelemetrySimulation() {
     const bpmDisplay = document.getElementById('hud-bpm');
     const statusDisplay = document.getElementById('hud-status');
@@ -189,36 +195,31 @@ function runTelemetrySimulation() {
         }
     }, 800);
 }
-// --- INTRO PORTAL LOGIC ---
-document.getElementById('enter-btn').addEventListener('click', () => {
-    // Fade out the intro screen
-    document.getElementById('intro-screen').classList.add('hidden');
-    
-    // (Optional) If you want PAX to welcome them immediately upon entering:
-    // setTimeout(() => { paxSpeak("Welcome to the Hearth."); }, 1500);
-});
 
-// --- ARCHITECT'S MANUAL OVERRIDE (Updated with Exit screen) ---
+// --- 8. ARCHITECT'S MANUAL OVERRIDE (Keyboard Fail-Safe & Exit Screen) ---
 document.addEventListener('keydown', (event) => {
     const vocalDisplay = document.getElementById('hud-vocal');
     const exitScreen = document.getElementById('exit-screen');
     
     // Press "H" for Help (Overload)
     if (event.key.toLowerCase() === 'h') {
-        vocalDisplay.innerHTML = "<span class='alert'>OVERLOAD DETECTED.</span>";
+        if(vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>OVERLOAD DETECTED.</span>";
         paxSpeak("Your body is sounding an alarm, but you are not in danger. Breathe with my light.");
     }
     
     // Press "S" for Safe/Stop (Tether Confirmed)
     if (event.key.toLowerCase() === 's') {
-        vocalDisplay.innerHTML = "<span class='calm'>TETHER CONFIRMED.</span>";
+        if(vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>TETHER CONFIRMED.</span>";
         paxSpeak("Tether confirmed. I am with you.", true);
         setTimeout(dismissHijack, 2000); 
     }
 
     // Press "E" for Exit (The Drop-the-Mic Ending)
     if (event.key.toLowerCase() === 'e') {
-        exitScreen.classList.remove('hidden'); // Fades the black screen & logo back in
+        if(exitScreen) {
+            exitScreen.style.display = 'flex'; // Ensure it can be seen
+            exitScreen.classList.remove('hidden'); // Fades the black screen & logo back in
+        }
         setTimeout(() => {
             paxSpeak("The Old Road awaits, Architect.", false);
         }, 1000);
