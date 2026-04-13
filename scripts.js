@@ -189,3 +189,38 @@ function runTelemetrySimulation() {
         }
     }, 800);
 }
+// --- INTRO PORTAL LOGIC ---
+document.getElementById('enter-btn').addEventListener('click', () => {
+    // Fade out the intro screen
+    document.getElementById('intro-screen').classList.add('hidden');
+    
+    // (Optional) If you want PAX to welcome them immediately upon entering:
+    // setTimeout(() => { paxSpeak("Welcome to the Hearth."); }, 1500);
+});
+
+// --- ARCHITECT'S MANUAL OVERRIDE (Updated with Exit screen) ---
+document.addEventListener('keydown', (event) => {
+    const vocalDisplay = document.getElementById('hud-vocal');
+    const exitScreen = document.getElementById('exit-screen');
+    
+    // Press "H" for Help (Overload)
+    if (event.key.toLowerCase() === 'h') {
+        vocalDisplay.innerHTML = "<span class='alert'>OVERLOAD DETECTED.</span>";
+        paxSpeak("Your body is sounding an alarm, but you are not in danger. Breathe with my light.");
+    }
+    
+    // Press "S" for Safe/Stop (Tether Confirmed)
+    if (event.key.toLowerCase() === 's') {
+        vocalDisplay.innerHTML = "<span class='calm'>TETHER CONFIRMED.</span>";
+        paxSpeak("Tether confirmed. I am with you.", true);
+        setTimeout(dismissHijack, 2000); 
+    }
+
+    // Press "E" for Exit (The Drop-the-Mic Ending)
+    if (event.key.toLowerCase() === 'e') {
+        exitScreen.classList.remove('hidden'); // Fades the black screen & logo back in
+        setTimeout(() => {
+            paxSpeak("The Old Road awaits, Architect.", false);
+        }, 1000);
+    }
+});
