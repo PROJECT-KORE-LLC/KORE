@@ -15,67 +15,52 @@ let isSanctuaryActive = false;
 let synth = window.speechSynthesis; 
 let paxVoice = null;
 
-// Browsers load voices on a delay, so we have to actively hunt for them
 function loadPremiumVoices() {
     let availableVoices = synth.getVoices();
     if (availableVoices.length === 0) return;
-
-    // We hunt for the highest quality native voices in order of preference
-    paxVoice = availableVoices.find(v => v.name.includes("Google UK English Female")) || // Android/Chrome Premium
-               availableVoices.find(v => v.name.includes("Samantha")) || // iOS/Mac Premium
-               availableVoices.find(v => v.name.includes("Moira")) || // Irish (Very calming)
-               availableVoices.find(v => v.name.includes("Microsoft Hazel")) || // Windows UK
-               availableVoices.find(v => v.name.includes("Fiona")) || // Mac Scottish
-               availableVoices.find(v => v.lang === 'en-GB') || // Any British voice
-               availableVoices[0]; // Fallback if device has terrible options
-
+    paxVoice = availableVoices.find(v => v.name.includes("Google UK English Female")) || 
+               availableVoices.find(v => v.name.includes("Samantha")) || 
+               availableVoices.find(v => v.name.includes("Moira")) || 
+               availableVoices.find(v => v.name.includes("Microsoft Hazel")) || 
+               availableVoices.find(v => v.name.includes("Fiona")) || 
+               availableVoices.find(v => v.lang === 'en-GB') || 
+               availableVoices[0]; 
     console.log("🗣️ PAX Voice Selected: " + paxVoice.name);
 }
 
-// Fire the hunt immediately, and also listen for when the browser finishes loading them
 loadPremiumVoices();
 if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = loadPremiumVoices;
 }
 
-// --- THE VOICE OF PAX (BULLETPROOF VERSION) ---
-window.paxUtterances = []; // Prevents the browser from deleting her voice mid-sentence
+window.paxUtterances = []; 
 
-function paxSpeak(text, callback) {
-    // 1. If she is already talking, instantly cut her off to prioritize your new command
-    if (synth.speaking) {
-        synth.cancel();
-    }
+function paxSpeak(text, isExit = false) {
+    // If she is talking, instantly cut her off so your new command works
+    if (synth.speaking) synth.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
-    window.paxUtterances.push(utterance); // Locks the sentence into memory
+    window.paxUtterances.push(utterance); 
     
-    // Attach the premium voice
-    if (paxVoice) {
-        utterance.voice = paxVoice;
-    }
-    
+    if (paxVoice) utterance.voice = paxVoice;
     utterance.rate = 0.85; 
     utterance.pitch = 0.9; 
     
-    // Duck the background audio
     const audio = document.getElementById('sanctuary-audio');
     if (audio) audio.volume = 0.1; 
 
-    // 2. When she finishes speaking, trigger the callback (which shuts down the protocol)
     utterance.onend = function () {
         if (audio && isSanctuaryActive) audio.volume = 0.5;
-        if (callback) callback();
-    };
-
-    // 3. Failsafe: If the browser's TTS engine glitches for any reason, shut down anyway
-    utterance.onerror = function() {
-        console.error("PAX voice error. Forcing callback.");
-        if (callback) callback();
+        
+        // THE CRITICAL FIX: Wake the mic back up immediately after she finishes talking!
+        if (!isExit && isSanctuaryActive && recognition) {
+            try { recognition.start(); console.log("🎙️ PAX finished. Mic awake."); } catch(e) {}
+        }
     };
 
     synth.speak(utterance);
 }
+
 function initializeEngine() {
     console.log("🚀 KORE Engine Initializing...");
 
@@ -93,7 +78,7 @@ function initializeEngine() {
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
         recognition.continuous = false; 
-        recognition.interimResults = false; // Changed to false so it waits for them to finish their sentence
+        recognition.interimResults = false; 
         
         recognition.onstart = function() { console.log("🎙️ PAX IS LISTENING..."); };
 
@@ -104,11 +89,14 @@ function initializeEngine() {
             const vocalDisplay = document.getElementById('hud-vocal');
 
             // --- THE AI INTENT ROUTER ---
-            if (transcript.includes("pax") || transcript.includes("safe") || transcript.includes("stop") || transcript.includes("good")) {
+            if (transcript.includes("pax") || transcript.includes("safe") || transcript.includes("stop") || transcript.includes("good") || transcript.includes("okay")) {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>TETHER CONFIRMED.</span>";
-                paxSpeak("Tether confirmed. I am with you. Logging your recovery.", () => {
-                    dismissHijack(); 
-                });
+                
+                // 1. Immediately trigger the UI shutdown
+                dismissHijack(); 
+                
+                // 2. Tell her to speak her final line (true = this is an exit, do not wake mic)
+                paxSpeak("Tether confirmed. I am with you.", true); 
             } 
             else if (transcript.includes("stress") || transcript.includes("panic") || transcript.includes("bad") || transcript.includes("help") || transcript.includes("scared")) {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>DISTRESS DETECTED.</span>";
@@ -116,7 +104,7 @@ function initializeEngine() {
             }
             else if (transcript.includes("who are you") || transcript.includes("what are you")) {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='calm'>IDENTITY QUERY.</span>";
-                paxSpeak("I am PAX. Your cognitive sanctuary. We are safe here.");
+                paxSpeak("I am PAX. Your cognitive sanctuary.");
             }
             else {
                 if (vocalDisplay) vocalDisplay.innerHTML = "<span class='alert'>ANALYZING...</span>";
@@ -127,7 +115,7 @@ function initializeEngine() {
         recognition.onerror = function(event) { console.error("❌ MIC ERROR: ", event.error); };
         
         recognition.onend = function() {
-            // Only restart listening if PAX isn't currently talking
+            // Only fall back to this if she isn't talking
             if (isSanctuaryActive && recognition && !synth.speaking) {
                 try { recognition.start(); } catch(e) {}
             }
@@ -152,11 +140,11 @@ function engageSanctuary() {
         
         if (audio) { audio.volume = 0.5; audio.play().catch(e => console.error(e)); } 
         
-        // Wait a second for the visual transition, then have PAX greet them
+        // Start the intro sequence
         setTimeout(() => {
-            paxSpeak("Sanctuary protocol engaged. Speak to me.", () => {
-                if (recognition) { try { recognition.start(); } catch(e) {} }
-            });
+            paxSpeak("Sanctuary protocol engaged. Speak to me.");
+            // Force the mic on after she starts her intro
+            setTimeout(() => { if (recognition) { try { recognition.start(); } catch(e) {} } }, 2000);
         }, 1500);
     }
 }
@@ -172,18 +160,19 @@ function dismissHijack(event) {
         clearInterval(bpmInterval); 
         if (wayshrine) wayshrine.classList.remove('breathing');
         
+        // Immediately shut off the mic so it doesn't accidentally trigger again
+        if (recognition) { try { recognition.stop(); } catch(e) {} }
+        isSanctuaryActive = false; // Flags the whole system to stop looping
+
+        // Wait 1 second so she can say "Tether confirmed", then fade everything out
         setTimeout(() => {
-            isSanctuaryActive = false;
             layer.classList.remove('active');
             stopHeartbeat();
-            
             if (audio) { audio.pause(); audio.currentTime = 0; }
-            if (recognition) { try { recognition.stop(); } catch(e) {} }
-            if (synth.speaking) synth.cancel(); // Stop her from talking if dismissed early
             
+            // Drop the frosted glass summary screen!
             if (summary) summary.classList.add('active');
-            
-        }, 1500);
+        }, 1000);
     }
 }
 
@@ -209,7 +198,6 @@ function closeSummary() {
     if (summary) summary.classList.remove('active');
 }
 
-// Simulated Telemetry (Ensure this is in your script from earlier!)
 let bpmInterval;
 function runTelemetrySimulation() {
     const bpmDisplay = document.getElementById('hud-bpm');
