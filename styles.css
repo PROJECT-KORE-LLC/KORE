@@ -1,55 +1,54 @@
 /* --- GENERAL RESET --- */
-body, html { margin: 0; padding: 0; background-color: #050508; overflow: hidden; font-family: 'Georgia', serif; }
-
-/* --- THE HEARTH & BREATHING --- */
-.hearth-container {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-image: url('pax.png'); background-size: cover; background-position: center center; background-repeat: no-repeat;
-    cursor: pointer; z-index: 1; transform: scale(1.05); 
+body, html { 
+    margin: 0; padding: 0; 
+    background-color: #050508; 
+    overflow: hidden; 
+    font-family: 'Inter', sans-serif; 
+    user-select: none; 
 }
-.hearth-container.breathing { animation: imageBreathe 4s infinite alternate ease-in-out; }
-@keyframes imageBreathe { 0% { transform: scale(1.05); } 100% { transform: scale(1.075); } }
 
-
-/* --- SOMATIC HIJACK & HUD --- */
-.somatic-filter {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: rgba(229, 149, 0, 0); 
-    z-index: 10; pointer-events: none; transition: background-color 1.5s ease-in-out;
-}
-.somatic-filter.active { background-color: rgba(229, 149, 0, 0.3); pointer-events: auto; animation: somaticBreathe 4s infinite alternate ease-in-out; }
-@keyframes somaticBreathe { 0% { opacity: 0.3; } 100% { opacity: 0.8; } }
-.exit-trigger { position: absolute; top: 30px; right: 30px; color: rgba(255, 255, 255, 0.5); font-size: 1rem; cursor: pointer; letter-spacing: 2px; transition: color 0.3s ease; }
-.exit-trigger:hover { color: rgba(255, 255, 255, 1); }
-
-.hud-container {
-    position: absolute; top: 25px; left: 20px; font-family: 'Courier New', Courier, monospace;
-    color: rgba(229, 179, 118, 0.5); background: transparent; padding: 0; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none;
-}
-.somatic-filter.active .hud-container { opacity: 1; }
-.hud-line { font-size: 0.7rem; margin-bottom: 3px; letter-spacing: 2px; text-transform: uppercase; }
-.hud-line span.alert { color: rgba(255, 77, 77, 0.8); text-shadow: 0 0 5px rgba(255, 77, 77, 0.3); }
-.hud-line span.calm { color: rgba(77, 255, 136, 0.8); text-shadow: 0 0 5px rgba(77, 255, 136, 0.3); }
-
-/* --- KORE PORTAL OVERLAYS (LUXURY TYPOGRAPHY) --- */
 .fullscreen-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: rgba(5, 5, 8, 0.4); backdrop-filter: blur(25px) brightness(0.6); -webkit-backdrop-filter: blur(25px) brightness(0.6);
-    z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1.5s ease-in-out, backdrop-filter 1.5s ease-in-out;
+    display: flex; justify-content: center; align-items: center;
+    background: #050508; transition: opacity 1s ease;
 }
-.hidden { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
-.brand-container { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
-/* THE MASSIVE TITLE */
-.kore-title { font-family: 'Times New Roman', serif; color: #E8DCC4; font-size: 5rem; letter-spacing: 15px; margin: 0 0 10px 0; text-shadow: 0 0 35px rgba(229, 179, 118, 0.6); }
-.kore-tagline { font-family: Arial, sans-serif; color: #D4AF37; font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px; opacity: 0.9; text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+.hidden { opacity: 0; pointer-events: none; }
 
-/* LUXURY BUTTONS */
-.sanctuary-btn {
-    background: rgba(20, 20, 20, 0.3); border: 1px solid rgba(212, 175, 55, 0.5); color: #D4AF37;
-    padding: 15px 40px; font-size: 1.1rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; border-radius: 4px;
-    backdrop-filter: blur(5px); transition: all 0.4s ease; animation: buttonBreathe 3s infinite alternate ease-in-out;
+.kore-title {
+    color: #E8DCC4; font-weight: 300; letter-spacing: 6px; 
+    text-transform: uppercase; font-size: 1.2rem; cursor: pointer;
 }
-.sanctuary-btn:hover { background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 1); color: #E8DCC4; box-shadow: 0px 0px 25px rgba(212, 175, 55, 0.6); animation: none; }
-@keyframes buttonBreathe { 0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); } 100% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); } }
 
+.pulse-text { animation: textPulse 2s infinite alternate; }
+@keyframes textPulse { 
+    0% { opacity: 0.3; } 
+    100% { opacity: 1; text-shadow: 0 0 15px #D4AF37; } 
+}
+
+/* --- THE HEARTH CORE --- */
+.glowing-core {
+    width: 20vmin; height: 20vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(5,5,8,0) 70%);
+    opacity: 0; /* Invisible during the 3-second vacuum */
+    transition: opacity 2s ease;
+}
+
+/* THE HIJACK ANIMATION */
+.somatic-active .glowing-core {
+    opacity: 1;
+    animation: somaticBreathe 3s infinite alternate ease-in-out;
+}
+
+@keyframes somaticBreathe {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+    }
+    100% { 
+        transform: scale(2.5);
+        background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, rgba(5,5,8,0) 70%);
+        box-shadow: 0 0 60px rgba(212, 175, 55, 0.3), inset 0 0 40px rgba(212, 175, 55, 0.2);
+    }
+}
