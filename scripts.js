@@ -4,31 +4,33 @@ let engineUnlocked = false;
 let hapticInterval;
 
 // --- LOAD PAX'S VOICE ---
-function loadVoices() {
+function loadPremiumVoices() {
     let voices = synth.getVoices();
     paxVoice = voices.find(v => v.name.includes("Google UK English Female")) || 
-               voices.find(v => v.name.includes("Samantha")) || voices[0];
+               voices.find(v => v.name.includes("Samantha")) || 
+               voices[0]; 
 }
-loadVoices();
-if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+loadPremiumVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadPremiumVoices;
 
 function paxSpeak(text, callback) {
     if (synth.speaking) synth.cancel();
-    let utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(text);
     if (paxVoice) utterance.voice = paxVoice;
-    utterance.rate = 0.85; utterance.pitch = 0.9;
+    utterance.rate = 0.85; 
+    utterance.pitch = 0.9; 
     if (callback) utterance.onend = callback;
     synth.speak(utterance);
 }
 
-// --- STEP 1: THE BREACH ---
-function unlockEngine() {
+// --- 1. THE TRIGGER (Fired by your original 'Enter Sanctuary' button) ---
+function initializeEngine() {
     if (engineUnlocked) return;
     engineUnlocked = true;
 
-    // 1. Hide the button, show the dark layer
-    document.getElementById('air-lock').classList.add('hidden');
-    document.getElementById('somatic-layer').classList.remove('hidden');
+    // 1. Hide your intro screen
+    const introScreen = document.getElementById('intro-screen');
+    if(introScreen) introScreen.classList.add('hidden');
 
     // 2. Ignite the fire audio immediately
     const audio = document.getElementById('sanctuary-audio');
@@ -38,17 +40,18 @@ function unlockEngine() {
     setTimeout(executeHijack, 3000);
 }
 
-// --- STEP 2: THE AUTOMATED HIJACK & LEDGER ---
+// --- 2. THE AUTOMATED HIJACK & LEDGER ---
 function executeHijack() {
-    // 1. Ignite the visual breathing
-    document.getElementById('somatic-layer').classList.add('somatic-active');
+    // 1. Ignite the visual breathing on your original hearth container
+    const hearth = document.querySelector('.hearth-container');
+    if(hearth) hearth.classList.add('breathing'); // Uses your original CSS animation
 
     // 2. Ignite the haptic heartbeat (Mobile only)
     if ("vibrate" in navigator) {
         navigator.vibrate([40, 60, 40]); 
         hapticInterval = setInterval(() => {
             navigator.vibrate([40, 60, 40]);
-        }, 3000); // Syncs with the 3s CSS animation
+        }, 3000); 
     }
 
     // 3. PAX Drops the Genesis Ledger
@@ -57,6 +60,14 @@ function executeHijack() {
     paxSpeak(genesisLedger, () => {
         // Stop the heartbeat when PAX finishes speaking
         clearInterval(hapticInterval);
-        // The visuals and fire audio remain looping in the background
     });
 }
+
+// Ensure the button works if the DOM is already loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const enterBtn = document.getElementById('enter-btn');
+    if (enterBtn) {
+        // Overriding the old click to trigger the new automated sequence
+        enterBtn.onclick = initializeEngine; 
+    }
+});
