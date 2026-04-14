@@ -125,33 +125,33 @@ function revealGuildCovenant() {
         
         const tagline = exitScreen.querySelector('.kore-tagline');
         if (tagline) {
-            // We create the button and explicitly tell it what to do
             tagline.innerHTML = `
-                <button id="final-cta-btn" class="sanctuary-btn">CLAIM YOUR SEAT</button>
+                <button id="final-cta-btn" class="sanctuary-btn" style="cursor: pointer;">CLAIM YOUR SEAT</button>
                 <p style="font-size: 0.7rem; margin-top: 20px; opacity: 0.5; letter-spacing: 2px;">
                     OR REMAIN IN THE STATIC.
                 </p>
             `;
 
-            // WIRE THE BUTTON IMMEDIATELY AFTER CREATING IT
             const btn = document.getElementById('final-cta-btn');
             if (btn) {
-                btn.onclick = joinTheGuild;
+                // Fire immediately on the first touch/click
+                btn.addEventListener('mousedown', joinTheGuild);
+                btn.addEventListener('touchstart', joinTheGuild);
             }
         }
     }
 }
 
-function joinTheGuild() {
-    // Replace with the email address you want the Ghost's messages to go to
+function joinTheGuild(e) {
+    if (e) e.preventDefault(); // Stop any weird browser stuttering
+
     const recipient = "architect@projectkore.org"; 
     const subject = "GUILD ADMITTANCE REQUEST";
     const body = "The Ledger has been decrypted. I have seen the blueprint from the kitchen floor. I am ready to discuss the move against the monopoly.";
     
-    // Construct the mailto link
     const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
-    // Execute the link
+    // Force the window to open the email client
     window.location.href = mailtoLink;
 }
     }
