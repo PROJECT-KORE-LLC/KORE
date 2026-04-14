@@ -118,30 +118,42 @@ function engageSanctuary() {
 }
 
 function revealGuildCovenant() {
-    // We reuse your 'exit-screen' or create a clean overlay
     const exitScreen = document.getElementById('exit-screen');
     if (exitScreen) {
         exitScreen.style.display = 'flex';
         exitScreen.classList.remove('hidden');
         
-        // Change the text to reflect the Guild choice
         const tagline = exitScreen.querySelector('.kore-tagline');
         if (tagline) {
+            // We create the button and explicitly tell it what to do
             tagline.innerHTML = `
-                <button class="sanctuary-btn" onclick="joinTheGuild()">CLAIM YOUR SEAT</button>
+                <button id="final-cta-btn" class="sanctuary-btn">CLAIM YOUR SEAT</button>
                 <p style="font-size: 0.7rem; margin-top: 20px; opacity: 0.5; letter-spacing: 2px;">
                     OR REMAIN IN THE STATIC.
                 </p>
             `;
+
+            // WIRE THE BUTTON IMMEDIATELY AFTER CREATING IT
+            const btn = document.getElementById('final-cta-btn');
+            if (btn) {
+                btn.onclick = joinTheGuild;
+            }
         }
     }
 }
 
 function joinTheGuild() {
-    // This opens their email and prepares the reply to the Ghost
-    window.location.href = "mailto:architect@kore.foundation?subject=GUILD ADMITTANCE REQUEST&body=The Ledger has been decrypted. I am ready to discuss the blueprint.";
+    // Replace with the email address you want the Ghost's messages to go to
+    const recipient = "architect@projectkore.org"; 
+    const subject = "GUILD ADMITTANCE REQUEST";
+    const body = "The Ledger has been decrypted. I have seen the blueprint from the kitchen floor. I am ready to discuss the move against the monopoly.";
+    
+    // Construct the mailto link
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Execute the link
+    window.location.href = mailtoLink;
 }
-        
     }
 }
 
