@@ -46,27 +46,37 @@ function paxSpeak(text) {
     synth.speak(utterance);
 }
 
-// --- 3. THE TRIGGER (Air-Lock & 3-Second Vacuum) ---
 function initializeEngine() {
+    if (engineUnlocked) return;
+    engineUnlocked = true;
+
+    const intro = document.getElementById('intro-screen');
+    const enterBtn = document.getElementById('enter-btn');
+
+    // 1. KILL THE BUTTON IMMEDIATELY
+    if (enterBtn) {
+        enterBtn.style.pointerEvents = 'none'; // Prevents double-taps
+        enterBtn.style.opacity = '0'; // Instant visual delete
+    }
+
+    // 2. FADE THE WALL
+    if (intro) {
+        intro.style.transition = "opacity 0.8s ease-in-out"; // Shorter, sharper fade
+        intro.style.opacity = '0';
+        // Remove from DOM entirely after fade to free up memory
+        setTimeout(() => { intro.style.display = 'none'; }, 800); 
+    }
+
+    // 3. IGNITE THE FIRE
     const audio = document.getElementById('sanctuary-audio');
     if (audio) {
         audio.volume = 0.15; 
-        let playPromise = audio.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => console.log("Audio trigger failed: Browser policy."));
-        }
+        audio.play().catch(e => console.log("Audio block bypass active."));
     }
 
-    const intro = document.getElementById('intro-screen');
-    if (intro) {
-        intro.classList.add('hidden');
-        setTimeout(() => { intro.style.display = 'none'; }, 1500); 
-    }
-
-    // The silence before the strike
+    // 4. THE VACUUM (3 seconds of pure silence/fire)
     setTimeout(engageSanctuary, 3000);
 }
-
 // --- 4. THE AUTOMATED DROP (The Public Utility Ledger) ---
 function engageSanctuary() {
     const layer = document.getElementById('somatic-layer');
