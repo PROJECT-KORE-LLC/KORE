@@ -34,9 +34,13 @@ html, body {
     transition: background-color 2.5s ease-in-out;
 }
 .somatic-filter.active { 
-    background-color: rgba(229, 149, 0, 0.3); 
+    background-color: rgba(229, 149, 0, 0.4) !important; /* Bumped to 0.4 for visibility */
+    opacity: 1 !important;
+    visibility: visible !important;
     pointer-events: auto; 
-    animation: somaticBreathe 4s infinite alternate ease-in-out; 
+    animation: somaticBreathe 4s infinite alternate ease-in-out;
+    /* This next line forces the S9 to "wake up" the layer */
+    backdrop-filter: sepia(20%) brightness(0.9); 
 }
 @keyframes somaticBreathe { 0% { opacity: 0.3; } 100% { opacity: 0.8; } }
 
