@@ -47,7 +47,7 @@ Join the Guild or remain in the static.
 * **Institutional Clones:** 1,708 Industrial-grade clones (Verified)
 * **Signatures:** 645 Unique handshakes (Verified)
 * **Manual Reconnaissance:** Time stamped (Verified)
-* **Obeservation:** The "Bridge" is currently a one-way street.
+* **Observation:** The "Bridge" is currently a one-way street.
 * **Vault Status:** [LOCKED / STAGED]
 
 Note to the Scout: Professionalization requires more than ingestion. It requires permission. Every clone is a documented confession of your corporate inability to innovate without extraction.
