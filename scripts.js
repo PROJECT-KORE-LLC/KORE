@@ -123,7 +123,7 @@ function revealGuildCovenant() {
 
 function joinTheGuild(e) {
     if (e) e.preventDefault();
-    const recipient = "architect@projectkore.org"; 
+    const recipient = "architect.kore@proton.me"; 
     const subject = "GUILD ADMITTANCE REQUEST";
     const body = "The Ledger has been decrypted. I have seen the blueprint from the kitchen floor. I am ready to discuss the move against the monopoly.";
     window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
