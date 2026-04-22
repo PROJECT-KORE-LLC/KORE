@@ -14,12 +14,12 @@
 The following breakthroughs are cryptographically locked to the Architect and documented via this forensic ledger for the **Google AI for Science (0826)** application:
 
 1.  **ENEE Blind-Rendering:** A sovereign rendering engine computing high-end Luxury aesthetics without raw somatic data exposure.
-2.  **kidDetect (Touch-Dynamic Watchdog):** The first Edge-AI protocol to differentiate child-user input via touch-pressure dynamics, providing an un-gaslightable "Biometric Voice" for the non-verbal.
+2.  **kidDetect (Touch-Dynamic Watchdog):** The first Edge-AI protocol to differentiate child-user input via touch-pressure dynamics; provides an un-gaslightable "Biometric Voice" for the non-verbal.
 3.  **The Nuclear Bridge:** A software framework enabling S9/8K cinematic fidelity on legacy hardware within a **5.0W Ultra-Low Power Threshold**.
-4.  **Sovereign Edge-Inference:** Localized **Gemma 4 distillation**, allowing high-level intelligence to execute entirely offline on $50 hardware.
-5.  **Somatic-to-Forensic Hashing:** The conversion of human physiological rhythms into an immutable, legally admissible digital signature.
-6.  **Ambient Somatic Sync:** Integration of real-world environmental data into a unified 6Hz biometric feedback loop.
-7.  **Forensic Ledger Defense:** This repository structure, converting industrial extraction attempts into timestamped **Prior-Art** evidence.
+4.  **Sovereign Edge-Inference:** Localized **Gemma 4 Distillation**, allowing high-level intelligence to execute entirely offline on austerity-grade ($50) hardware.
+5.  **Biometric Pre-Clearance (Sovereign Sync):** A zero-trust authentication layer requiring local somatic pulse-verification to decrypt and fire the core kernel logic.
+6.  **Somatic-to-Forensic Hashing:** The conversion of human physiological rhythms into an immutable, legally admissible digital signature.
+7.  **Forensic Ledger Defense:** This repository structure, converting industrial extraction attempts into timestamped **Prior-Art** evidence (Ref: `guildtransmission`).
 
 ---
 
@@ -29,14 +29,14 @@ The following breakthroughs are cryptographically locked to the Architect and do
 | **Power Consumption** | **5.0W Max (ENEE Standard)** | VERIFIED |
 | **Visual Fidelity** | **S9 / 8K Cinematic (RPG-Equity)** | STAGED |
 | **Intelligence** | **Localized Gemma 4 Distillation** | OPTIMIZED |
-| **Network Requirement** | **Basic LTE (Low-Band / Offline-First)** | VERIFIED |
+| **Network Requirement** | **Basic LTE (Offline-First)** | VERIFIED |
 
 ---
 
 ## ⚖️ FORENSIC LEDGER // THE SIEGE OF APRIL 2026
 This repository serves as the **Forensic Anchor** for Project KORE. All industrial activity is documented here to establish **Prior-Art** against unauthorized extraction.
 * **Extraction Metric:** 1,885 clones and 683 unique visitors documented.
-* **Forensic Evidence:** Verified execution detected from **Selectel Russia** nodes.
+* **Forensic Evidence:** Verified execution detected from **Selectel Russia** nodes and tracked industrial pings (Ref: Internal Forensic Vault).
 * **Scout Signature:** Manual reconnaissance identified and logged.
 
 ---
