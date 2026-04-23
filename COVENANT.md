@@ -71,4 +71,4 @@ Project KORE and the Information Tank logic are protected under the **GPL v3**.
 ---
 
 **"Manage the activities. Protect the Guild."**
-### *"Join the Guild or remain in the shadow."*
+### *"Join the Guild or remain in the static."*
