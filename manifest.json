@@ -1,6 +1,6 @@
 {
   "short_name": "KORE",
-  "name": "PROJECT KORE // Sovereign Interface",
+  "name": "PROJECT KORE // Sovereign Sync",
   "description": "Industrial-grade organizational utility and somatic sanctuary.",
   "icons": [
     {
@@ -10,10 +10,22 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "guild.html",
+  "start_url": "teaser.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#050505",
   "theme_color": "#d4af37",
-  "categories": ["productivity", "utilities"]
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "The Archive",
+      "url": "archive.html",
+      "description": "Open Sovereign Journaling"
+    },
+    {
+      "name": "The Hearth",
+      "url": "hearth.html",
+      "description": "Open Resource Logistics"
+    }
+  ]
 }
