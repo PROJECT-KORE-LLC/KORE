@@ -86,12 +86,67 @@ function engageSanctuary() {
         if (hearth) hearth.classList.add('breathing'); 
         
         startHeartbeat();
+        injectBypassButton(); // <-- Injects the Fast-Travel Override
         
         const genesisLedger = `Sovereignty established. Now, look at the reality of the Monopoly. Forty-two billion dollars a year. That is what the recovery industry generates while operating as a cartel of apathy. They treat the individual, and they abandon the family to the fallout. Right now, eighteen million children are living in the blast radius of substance use. They are not collateral damage. They are being groomed by trauma to become the industry's next generation of profit. When a clinic charges fifty thousand dollars and discharges a volatile individual back into a home without a lethality check, the state calls it success. We call it a death sentence. Project KORE is a Global Public Utility for the world. We do not answer to shareholders. Our code provides the ungaslightable proof that systems ignore—capturing the tachyon spikes of trauma that police and rehabs leave behind. We deliver AAA-tier somatic regulation directly to the government-issued phones of the underserved. Every decrypted fragment is protected by ENEE. And while we heal the family, our B2B security licensing funds the mission—powering the pro-bono artillery that helps families sue the very entities that neglected them. We will make systemic apathy fund its own replacement. What you are looking at is a zero-day exploit in the behavioral health monopoly. This is not a product; it is a Digital Public Utility. And before you audit the code, understand its origin. This Engine was not built in a high-rise with seed capital. It was forged on a kitchen floor in the middle of the night, written in a Walmart notebook by an Architect who knows exactly what it costs to survive the system. The blueprint is live. Are you ready to claim your seat in the Guild... or should we pass the torch to the next target?`;
         
         setTimeout(() => paxSpeak(genesisLedger), 500);
     }
 }
+
+/* --- THE TACTICAL KILLSWITCH LOGIC --- */
+function injectBypassButton() {
+    const bypassBtn = document.createElement('button');
+    bypassBtn.innerText = "[ BYPASS TRANSMISSION // ENTER GUILD ]";
+    bypassBtn.style.position = "fixed";
+    bypassBtn.style.top = "30px";
+    bypassBtn.style.left = "50%";
+    bypassBtn.style.transform = "translateX(-50%)";
+    bypassBtn.style.background = "rgba(15, 15, 15, 0.85)";
+    bypassBtn.style.border = "1px solid #d4af37";
+    bypassBtn.style.color = "#d4af37";
+    bypassBtn.style.padding = "10px 20px";
+    bypassBtn.style.fontFamily = "'Georgia', serif";
+    bypassBtn.style.fontSize = "0.6rem";
+    bypassBtn.style.letterSpacing = "3px";
+    bypassBtn.style.cursor = "pointer";
+    bypassBtn.style.zIndex = "9999";
+    bypassBtn.style.backdropFilter = "blur(10px)";
+    bypassBtn.style.opacity = "0";
+    bypassBtn.style.transition = "opacity 2s";
+
+    bypassBtn.onclick = bypassTransmission;
+
+    document.body.appendChild(bypassBtn);
+    
+    // Fade it in slowly so it doesn't break the cinematic immersion
+    setTimeout(() => { bypassBtn.style.opacity = "0.7"; }, 2000);
+    
+    bypassBtn.onmouseover = () => { bypassBtn.style.opacity = "1"; bypassBtn.style.boxShadow = "0 0 15px rgba(212, 175, 55, 0.5)"; };
+    bypassBtn.onmouseout = () => { bypassBtn.style.opacity = "0.7"; bypassBtn.style.boxShadow = "none"; };
+}
+
+function bypassTransmission() {
+    console.log("⚡ Bypass Activated. Silencing PAX.");
+    
+    // 1. Kill the Voice
+    if (synth.speaking) synth.cancel();
+    
+    // 2. Kill the Haptics
+    clearInterval(heartbeatInterval);
+    
+    // 3. Lock Identity
+    localStorage.setItem('KORE_Identity_Locked', 'true');
+    
+    // 4. Fade to Black & Warp
+    document.body.style.transition = "1s";
+    document.body.style.opacity = "0";
+    
+    setTimeout(() => {
+        window.location.href = 'guild.html';
+    }, 1000);
+}
+/* ------------------------------------- */
 
 function startHeartbeat() { 
     if ("vibrate" in navigator) { 
@@ -109,13 +164,21 @@ function revealGuildCovenant() {
         const tagline = exitScreen.querySelector('.kore-tagline');
         if (tagline) {
             tagline.innerHTML = `
-                <button id="final-cta-btn" class="sanctuary-btn" style="cursor: pointer;">CLAIM YOUR SEAT</button>
+                <button id="final-cta-btn" class="sanctuary-btn" style="cursor: pointer; margin-bottom: 15px;">CLAIM YOUR SEAT</button>
+                <br>
+                <button id="enter-guild-btn" class="sanctuary-btn" style="cursor: pointer; background: transparent; border: 1px solid #d4af37; color: #d4af37;">ENTER SANCTUARY</button>
                 <p style="font-size: 0.7rem; margin-top: 20px; opacity: 0.5; letter-spacing: 2px;">OR REMAIN IN THE STATIC.</p>
             `;
-            const btn = document.getElementById('final-cta-btn');
-            if (btn) {
-                btn.onmousedown = joinTheGuild;
-                btn.ontouchstart = joinTheGuild;
+            const ctaBtn = document.getElementById('final-cta-btn');
+            if (ctaBtn) {
+                ctaBtn.onmousedown = joinTheGuild;
+                ctaBtn.ontouchstart = joinTheGuild;
+            }
+            
+            const enterBtn = document.getElementById('enter-guild-btn');
+            if (enterBtn) {
+                enterBtn.onmousedown = bypassTransmission;
+                enterBtn.ontouchstart = bypassTransmission;
             }
         }
     }
