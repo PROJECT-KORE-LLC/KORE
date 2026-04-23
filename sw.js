@@ -1,11 +1,9 @@
-/* PROJECT KORE // SERVICE WORKER v1.0
-   IDENT-LOCK: Akasia Moon // Forensic Infrastructure
-*/
+const CACHE_NAME = 'KORE_Sovereign_Shield_v2';
 
-const CACHE_NAME = 'KORE-V1-SOVEREIGN';
-
-// THE ASSET VAULT: Every file required for full offline functionality.
 const ASSETS = [
+    // --- CORE MAINframe ---
+    './',
+    'index.html',
     'teaser.html',
     'guild.html',
     'covenant.html',
@@ -14,58 +12,72 @@ const ASSETS = [
     'gallery.html',
     'manifest.json',
     'audio-engine.js',
+    'kore-logo.png',
+
+    // --- VISUAL RENDER ARRAY (WebP) ---
     'atrium_8k.webp',
     'command_8k.webp',
     'logistics_8k.webp',
     'gallery_8k.webp',
-    'Apotheosis.png',
+
+    // --- THE RESONANCE ARRAY (Audio) ---
     'waves.mp3',
-    'icon_512.jpg'
-    // NOTE: Add your other 21 MP3 tracks here if you want them 100% offline.
+    'rain.mp3',
+    'thunder.mp3',
+    'winterwind.mp3',
+    'owls.mp3',
+    'raven.mp3',
+    'frogs.mp3',
+    'crickets.mp3',
+    'fire.mp3',
+    'simmeringpot.mp3',
+    'teacup.mp3',
+    'clock.mp3',
+    'cat.mp3',
+    'windchimes.mp3',
+    'musicbox1.mp3',
+    'musicbox2.mp3',
+    'musicbox3.mp3',
+    'xmasmusicbox1.mp3',
+    'xmasmusicbox2.mp3',
+    'xmasmusicbox3.mp3',
+    'darkmusic1.mp3',
+    'binarymusicbox.mp3'
 ];
 
-// 1. INSTALL: Forging the local cache on the S9 hardware.
+// Installation: Vaulting the Assets
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('KORE // Shielding Assets: Protocol Initiated.');
+            console.log('KORE // Shielding the Resonance Array...');
             return cache.addAll(ASSETS);
         })
     );
-    // Force the waiting service worker to become the active service worker.
     self.skipWaiting();
 });
 
-// 2. ACTIVATE: Purging legacy data to ensure 8K AAA parity.
+// Activation: Purging Old Ghost Data
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((keys) => {
+        caches.keys().then((cacheNames) => {
             return Promise.all(
-                keys.map((key) => {
-                    if (key !== CACHE_NAME) {
-                        console.log('KORE // Purging Legacy Cache:', key);
-                        return caches.delete(key);
+                cacheNames.map((cache) => {
+                    if (cache !== CACHE_NAME) {
+                        console.log('KORE // Purging Stale Transmission:', cache);
+                        return caches.delete(cache);
                     }
                 })
             );
         })
     );
-    // Ensure the SW takes control of the page immediately.
-    return self.clients.claim();
+    self.clients.claim();
 });
 
-// 3. FETCH: The Sovereign Hijack.
-// Prioritizes the local vault (cache) over the network for zero-latency.
+// Fetch: Serving from the Vault (Offline Mode)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            // Return from vault OR fetch from network if not vaulted.
-            return cachedResponse || fetch(event.request).then((networkResponse) => {
-                return networkResponse;
-            });
-        }).catch(() => {
-            // If both fail (Offline + Not in Cache), return a blank state.
-            console.error('KORE // Sovereign Shield: Asset not found in vault.');
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
         })
     );
 });
