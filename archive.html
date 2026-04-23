@@ -5,219 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE ARCHIVE // PROJECT KORE</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
     <script>
-        if (performance.navigation.type === 1 || window.performance.getEntriesByType("navigation")[0].type === "reload") {
-            window.location.href = "guild.html"; 
-        }
+        if (performance.navigation.type === 1) { window.location.href = "guild.html"; }
     </script>
-    
     <style>
         [x-cloak] { display: none !important; }
+        :root { --bg: #050505; --accent: #d4af37; --text: #e0e0e0; --glass: rgba(10, 10, 10, 0.85); }
+        [data-palette="LUNAR"] { --bg: #0a0c10; --accent: #a8c0ff; --text: #ffffff; }
+        [data-palette="VELLUM"] { --bg: #0f0d0b; --accent: #c4a484; --text: #d2b48c; }
+        [data-palette="AMETHYST"] { --bg: #0d0510; --accent: #cd7f32; --text: #9b59b6; }
 
-        /* --- THE ALIGNMENT ARRAY (ONE-CLICK PERSONALIZATION) --- */
-        :root {
-            /* DEFAULT: NOIR FILIGREE */
-            --bg: #050505; --accent: #d4af37; --text: #e0e0e0; --glass: rgba(15, 15, 15, 0.9);
-        }
-        [data-palette="LUNAR"] {
-            --bg: #0a0c10; --accent: #a8c0ff; --text: #ffffff; --glass: rgba(10, 12, 16, 0.9);
-        }
-        [data-palette="VELLUM"] {
-            --bg: #0f0d0b; --accent: #c4a484; --text: #d2b48c; --glass: rgba(35, 25, 20, 0.95);
-        }
-        [data-palette="AMETHYST"] {
-            --bg: #0d0510; --accent: #cd7f32; --text: #9b59b6; --glass: rgba(30, 10, 40, 0.9);
-        }
-
-        body {
-            margin: 0; height: 100vh; overflow: hidden;
-            font-family: 'Georgia', serif;
-            background: var(--bg) url('Apotheosis.png') center/cover no-repeat;
-            color: var(--text);
-            display: flex; flex-direction: column;
-            transition: background-color 0.8s ease, color 0.8s ease;
-        }
-
-        /* --- THE 6HZ SOMATIC PULSE --- */
-        .pulse-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--accent);
-            opacity: 0; pointer-events: none; z-index: 999;
-            animation: somatic 0.166s infinite alternate;
-        }
-        @keyframes somatic { from { opacity: 0; } to { opacity: 0.02; } }
-
-        /* PRIVACY VEIL (CLOAK) */
-        .veiled { filter: blur(40px) grayscale(1); pointer-events: none; user-select: none; }
-
-        /* SEAMLESS HEADER */
-        .nav-header {
-            position: absolute; top: 0; left: 0; width: 100%;
-            padding: 30px 40px; display: flex; justify-content: space-between; align-items: flex-start;
-            z-index: 100; box-sizing: border-box;
-        }
-
-        .back-link { 
-            color: var(--accent); text-decoration: none; font-size: 0.7rem; 
-            letter-spacing: 3px; opacity: 0.6; transition: 0.4s;
-            text-shadow: 0 0 10px #000; text-transform: uppercase;
-        }
-        .back-link:hover { opacity: 1; text-shadow: 0 0 15px var(--accent); }
-
-        /* ARTIFACT BUTTONS */
-        .artifact-btn {
-            background: var(--glass); backdrop-filter: blur(10px);
-            border: 1px solid var(--accent); color: var(--accent);
-            padding: 10px 25px; border-radius: 2px; cursor: pointer;
-            font-size: 0.65rem; letter-spacing: 2px; transition: 0.4s;
-            text-transform: uppercase;
-        }
-        .artifact-btn:hover { background: var(--accent); color: var(--bg); }
-        .veil-active { background: #fca5a5; color: #000; border-color: #fca5a5; }
-
-        /* THE WORKSPACE */
-        .workspace { display: flex; flex: 1; padding: 120px 40px 40px; gap: 30px; overflow: hidden; align-items: flex-start; }
-
-        /* THE WRITING DESK */
-        .desk-card {
-            background: var(--glass); backdrop-filter: blur(25px);
-            border: 1px solid var(--accent); border-radius: 2px;
-            flex: 2; height: 72vh; padding: 40px; position: relative;
-            transition: all 0.5s ease; display: flex; flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0,0,0,1);
-        }
-        .entry-title {
-            background: transparent; border: none; border-bottom: 1px solid var(--accent);
-            color: #fff; font-size: 1.8rem; font-family: inherit; outline: none; margin-bottom: 25px; width: 100%;
-            letter-spacing: 2px;
-        }
-        .entry-body {
-            background: transparent; border: none; color: #fdfbf7;
-            font-size: 1.1rem; line-height: 1.6; font-family: inherit;
-            outline: none; resize: none; flex: 1;
-        }
-
-        /* THE ARCHIVE SIDEBAR */
-        .archive-sidebar {
-            background: var(--glass); backdrop-filter: blur(25px);
-            border: 1px solid var(--accent); border-radius: 2px;
-            flex: 0.8; height: 72vh; padding: 30px; position: relative;
-            transition: all 0.5s ease; display: flex; flex-direction: column;
-        }
-
-        .minimized { flex: 0 !important; width: 60px !important; height: 60px !important; padding: 0 !important; overflow: hidden; border-radius: 50%; border-color: var(--accent); display: flex; justify-content: center; align-items: center; }
-
-        .search-scroll { background: rgba(0,0,0,0.5); border: 1px solid var(--accent); color: #fff; padding: 10px 15px; margin: 15px 0; outline: none; width: 100%; box-sizing: border-box; }
+        body { margin: 0; height: 100vh; overflow: hidden; font-family: 'Georgia', serif; background: var(--bg) url('Apotheosis.png') center/cover no-repeat; color: var(--text); transition: 0.8s; }
         
-        .entry-item { padding: 15px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s; }
-        .entry-item:hover { background: rgba(255,255,255,0.08); border-left: 3px solid var(--accent); }
+        .neural-anchor { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent); opacity: 0; pointer-events: none; z-index: 9999; animation: brainReset 0.166s infinite alternate; }
+        @keyframes brainReset { from { opacity: 0; } to { opacity: 0.02; } }
+        .breathing-filigree { position: fixed; bottom: -10%; right: -10%; width: 70%; height: 70%; background: radial-gradient(circle at bottom right, var(--accent), transparent 70%); filter: blur(60px); pointer-events: none; animation: somaticBreath 19s infinite ease-in-out; }
+        @keyframes somaticBreath { 0%, 100% { opacity: 0.05; transform: scale(1); } 21%, 58% { opacity: 0.3; transform: scale(1.1); } }
 
-        .commit-btn { margin-top: 20px; padding: 15px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; letter-spacing: 3px; text-transform: uppercase; font-size: 0.7rem; transition: 0.4s; }
-        .commit-btn:hover { background: var(--accent); color: var(--bg); }
+        .nav-header { position: absolute; top: 0; width: 100%; padding: 30px 40px; display: flex; justify-content: space-between; z-index: 100; box-sizing: border-box; }
+        .artifact-btn { background: rgba(0,0,0,0.6); border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; cursor: pointer; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* FORENSIC FOOTER */
-        .forensic-footer { position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 0.6rem; letter-spacing: 2px; opacity: 0.3; pointer-events: none; }
+        .workspace { display: flex; flex: 1; padding: 120px 40px 40px; gap: 30px; height: 100vh; box-sizing: border-box; position: relative; z-index: 10; }
+        .desk-card { background: var(--glass); border: 1px solid var(--accent); flex: 2; padding: 40px; display: flex; flex-direction: column; backdrop-filter: blur(25px); }
+        .entry-title { background: transparent; border: none; border-bottom: 1px solid var(--accent); color: #fff; font-size: 1.8rem; outline: none; margin-bottom: 20px; font-family: inherit; }
+        .entry-body { background: transparent; border: none; color: #fdfbf7; font-size: 1.1rem; line-height: 1.6; outline: none; resize: none; flex: 1; font-family: inherit; }
     </style>
 </head>
-<body x-data="nookApp()" @keydown.escape.window="toggleVeil()">
-
-    <div class="pulse-layer"></div>
-
+<body x-data="archiveApp()">
+    <div class="neural-anchor"></div>
+    <div class="breathing-filigree"></div>
     <nav class="nav-header">
-        <a href="guild.html" class="back-link">◂ THE GUILD HALL</a>
-        
-        <div style="display:flex; gap:15px; align-items:center;">
-            <button class="artifact-btn" onclick="toggleAlignment()">✨ ALIGNMENT</button>
-            <button class="artifact-btn" :class="isVeiled ? 'veil-active' : ''" @click="toggleVeil()">
-                <span x-text="isVeiled ? '✨ UNVEIL' : '🔒 CLOAK (ESC)'"></span>
-            </button>
-            <button class="artifact-btn" onclick="window.location.href='resonance.html'">RESONANCE</button>
-        </div>
+        <a href="guild.html" style="color: var(--accent); text-decoration: none; font-size: 0.7rem; letter-spacing: 3px;">◂ GUILD HALL</a>
+        <button class="artifact-btn" onclick="toggleAlignment()">✨ ALIGNMENT</button>
     </nav>
-
     <main class="workspace">
-        <section class="desk-card" :class="{'minimized': !deskOpen, 'veiled': isVeiled}">
-            <div x-show="deskOpen" style="height:100%; display:flex; flex-direction:column;">
-                <input type="text" class="entry-title" x-model="currentEntry.title" placeholder="A Hidden Truth...">
-                <textarea class="entry-body" x-model="currentEntry.content" placeholder="Describe the history of the Forge..."></textarea>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <button class="commit-btn" @click="saveEntry()" style="flex:1;">COMMIT TO SOVEREIGN LEDGER</button>
-                    <button @click="deskOpen = false" style="background:none; border:none; color:var(--accent); font-size:0.6rem; margin-left:20px; cursor:pointer; opacity: 0.5;">Collapse</button>
-                </div>
-            </div>
-            <div x-show="!deskOpen" @click="deskOpen = true" style="font-size: 1.5rem; cursor:pointer;">🖋️</div>
+        <section class="desk-card">
+            <input type="text" class="entry-title" placeholder="Codify the History...">
+            <textarea class="entry-body" placeholder="Whisper your thoughts to the Archive..."></textarea>
+            <button class="artifact-btn" style="margin-top:20px; width:100%;">COMMIT TO HISTORY</button>
         </section>
-
-        <aside class="archive-sidebar" :class="{'minimized': !archiveOpen, 'veiled': isVeiled}">
-            <div x-show="archiveOpen" style="height:100%; display:flex; flex-direction:column;">
-                <h3 style="color:var(--accent); letter-spacing:3px; margin:0; font-size: 0.8rem; text-transform: uppercase;">The Archive</h3>
-                <input type="text" class="search-scroll" x-model="searchQuery" placeholder="Search Scrolls...">
-                
-                <div style="overflow-y:auto; flex:1; padding-right: 5px;">
-                    <template x-for="entry in filteredEntries" :key="entry.id">
-                        <div class="entry-item" @click="loadEntry(entry)">
-                            <div style="font-size:0.55rem; color:var(--accent); text-transform:uppercase; opacity: 0.6;" x-text="entry.timestamp"></div>
-                            <div style="font-size:0.9rem; color:#fff;" x-text="entry.title || 'Untitled Log'"></div>
-                        </div>
-                    </template>
-                </div>
-                <button @click="archiveOpen = false" style="background:none; border:none; color:var(--accent); font-size:0.6rem; margin-top:10px; cursor:pointer; opacity: 0.5;">Hide Archive</button>
-            </div>
-            <div x-show="!archiveOpen" @click="archiveOpen = true" style="font-size: 1.5rem; cursor:pointer;">📜</div>
-        </aside>
     </main>
-
-    <div class="forensic-footer">
-        PROJECT KORE // THE CHRONICLER // ID: 53858700 // GNU GPL V3
-    </div>
-
     <script>
-        /* THE ALIGNMENT KERNEL */
         const palettes = ['NOIR', 'LUNAR', 'VELLUM', 'AMETHYST'];
         function toggleAlignment() {
-            let current = localStorage.getItem('KORE_Palette') || 'NOIR';
-            let next = palettes[(palettes.indexOf(current) + 1) % palettes.length];
+            let next = palettes[(palettes.indexOf(localStorage.getItem('KORE_Palette') || 'NOIR') + 1) % palettes.length];
             document.documentElement.setAttribute('data-palette', next);
             localStorage.setItem('KORE_Palette', next);
         }
-        document.addEventListener('DOMContentLoaded', () => {
-            document.documentElement.setAttribute('data-palette', localStorage.getItem('KORE_Palette') || 'NOIR');
-        });
-
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('nookApp', () => ({
-                isVeiled: false, deskOpen: true, archiveOpen: true,
-                searchQuery: '', entries: [], currentEntry: { id: null, title: '', content: '' },
-                init() {
-                    this.entries = JSON.parse(localStorage.getItem('KORE_Archive')) || [];
-                },
-                toggleVeil() { this.isVeiled = !this.isVeiled; },
-                get filteredEntries() {
-                    return this.entries.filter(e => 
-                        e.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-                        e.content.toLowerCase().includes(this.searchQuery.toLowerCase())
-                    ).sort((a,b) => b.id - a.id);
-                },
-                saveEntry() {
-                    if (!this.currentEntry.title && !this.currentEntry.content) return;
-                    const now = new Date();
-                    const timestamp = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    if (this.currentEntry.id) {
-                        const idx = this.entries.findIndex(e => e.id === this.currentEntry.id);
-                        this.entries[idx] = { ...this.currentEntry, timestamp };
-                    } else {
-                        const newId = Date.now();
-                        this.entries.push({ ...this.currentEntry, id: newId, timestamp });
-                        this.currentEntry.id = newId;
-                    }
-                    localStorage.setItem('KORE_Archive', JSON.stringify(this.entries));
-                    alert("History Committed to the Forge.");
-                },
-                loadEntry(entry) { this.currentEntry = { ...entry }; this.deskOpen = true; },
-                newEntry() { this.currentEntry = { id: null, title: '', content: '' }; }
-            }))
-        })
+        document.addEventListener('DOMContentLoaded', () => { document.documentElement.setAttribute('data-palette', localStorage.getItem('KORE_Palette') || 'NOIR'); });
+        document.addEventListener('alpine:init', () => { Alpine.data('archiveApp', () => ({ init() {} })) });
     </script>
 </body>
 </html>
