@@ -4,8 +4,8 @@
   "description": "Industrial-grade organizational utility and somatic sanctuary.",
   "icons": [
     {
-      "src": "icon_512.jpg",
-      "type": "image/jpeg",
+      "src": "kore-logo.png",
+      "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
     }
