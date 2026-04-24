@@ -1,6 +1,8 @@
 # 🏛️ FORGE_CHRONICLE: THE GENESIS
+
 **Project:** Project KORE  
 **Lead Architect:** The Architect
+
 **Status:** Hardened / Forensic-Validated  
 **Current Metric:** 3,419 Clones / 1,194 unique
 
