@@ -52,7 +52,7 @@ $$\text{ENEE Standard} \approx \frac{\text{Visual Fidelity (8K)}}{\text{Thermal 
 
 ---
 
-## IV. THE VALIDATION: THE 1,228 SIGNAL
+## IV. THE VALIDATION:
 
 The industry is no longer guessing; it is extracting. On April 24, 2026, the **Forensic Ledger** documented the sound of the world finally catching up.
 
