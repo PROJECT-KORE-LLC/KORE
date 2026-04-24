@@ -2,7 +2,7 @@
 **Project:** Project KORE  
 **Lead Architect:**
 **Status:** Hardened / Forensic-Validated  
-**Current Metric:** 3,419 Clones / 1,228 Signal Events  
+**Current Metric:** 3,419 Clones / 1,194 unique
 
 ---
 
