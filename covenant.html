@@ -1,1 +1,274 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PROJECT KORE // THE COVENANT [CRICKET_SYNC]</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --pax-amber: rgba(229, 149, 0, 0.4);
+            --glass-base: rgba(8, 8, 10, 0.9);
+            --tempo: 4s; 
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            background: #020204;
+            overflow: hidden;
+            font-family: 'Times New Roman', serif;
+            height: 100%; width: 100%;
+            color: #F4EBD0;
+        }
+
+        /* --- THE HEARTH (Layer 1 - BACKGROUND) --- */
+        #bg-anchor {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('logistics_8k.webp') no-repeat center center;
+            background-size: cover;
+            z-index: 1;
+            transform: scale(1.15);
+            animation: imageBreathe var(--tempo) infinite alternate ease-in-out;
+            will-change: transform;
+            cursor: default;
+        }
+
+        @keyframes imageBreathe { 
+            0% { transform: scale(1.15); } 100% { transform: scale(1.2); } 
+        }
+
+        /* --- SOMATIC HIJACK (Layer 2 - ENEE HARDENED) --- */
+        #glow-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--pax-amber);
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0.1;
+            animation: somaticBreathe var(--tempo) infinite alternate ease-in-out;
+            will-change: opacity;
+            backdrop-filter: sepia(5%) brightness(0.98) blur(8px); 
+            -webkit-backdrop-filter: sepia(5%) brightness(0.98) blur(8px);
+        }
+
+        @keyframes somaticBreathe { 
+            0% { opacity: 0.1; } 100% { opacity: 0.45; } 
+        }
+
+        /* --- THE UI VIEWPORT --- */
+        #ui-viewport {
+            position: relative;
+            z-index: 100;
+            height: 100vh; width: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 40px; box-sizing: border-box;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 1.0s ease;
+        }
+
+        .cloaked {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* --- THE COMMAND TANK (Layer 3 - 15px LUX GLASS) --- */
+        .command-tank {
+            width: 100%; max-width: 1000px;
+            background: rgba(8, 8, 10, 0.88);
+            backdrop-filter: blur(15px) saturate(110%);
+            -webkit-backdrop-filter: blur(15px) saturate(110%);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 45px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 0 25px var(--gold-glow);
+            display: flex; flex-direction: column; gap: 25px;
+        }
+
+        .tank-header {
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: baseline;
+        }
+
+        .tank-header h2 {
+            margin: 0; font-size: 1.6rem; letter-spacing: 10px;
+            text-transform: uppercase; color: var(--gold);
+            text-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        /* LOGISTICS GRID */
+        .logistics-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            height: 220px; overflow-y: auto;
+            font-family: 'Georgia', serif; padding-right: 15px;
+        }
+
+        .directive-card {
+            background: rgba(212, 175, 55, 0.03);
+            border-left: 2px solid var(--gold);
+            padding: 12px;
+        }
+
+        .directive-card h3 {
+            margin: 0 0 8px 0; font-size: 0.75rem; letter-spacing: 2px;
+            color: var(--gold); text-transform: uppercase;
+        }
+
+        .directive-card p {
+            margin: 0; font-size: 0.85rem; line-height: 1.6;
+            color: rgba(244, 235, 208, 0.8);
+        }
+
+        /* --- THE COMMAND ARRAY --- */
+        .command-array {
+            margin-top: 40px;
+            display: flex; gap: 15px;
+            flex-wrap: wrap; justify-content: center;
+        }
+
+        .lux-btn {
+            background: rgba(8, 8, 10, 0.95);
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            color: var(--gold);
+            padding: 10px 24px; cursor: pointer;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 4px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .lux-btn:hover { background: var(--gold); color: #000; }
+
+        /* THE GHOST TRIGGER */
+        #cloak-btn {
+            position: fixed;
+            top: 25px; right: 25px;
+            z-index: 2000;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--gold); padding: 10px 18px;
+            cursor: pointer; font-size: 0.6rem; letter-spacing: 3px;
+            text-transform: uppercase;
+            backdrop-filter: blur(8px);
+        }
+
+        /* PALETTE ALIGNMENTS */
+        .noir { filter: contrast(1.1) brightness(0.9) sepia(0.1); }
+        .lunar { filter: contrast(0.9) brightness(1.15) hue-rotate(180deg) saturate(0.5); }
+        .vellum { filter: sepia(0.45) brightness(1.0) contrast(1.05); }
+        .amethyst { filter: hue-rotate(270deg) brightness(0.9) saturate(1.1); }
+
+    </style>
+</head>
+<body onclick="ghostRestore(event)">
+
+    <button id="cloak-btn" onclick="toggleCloak(event)">Cloak Tank</button>
+
+    <div id="bg-anchor"></div>
+    <div id="glow-layer"></div>
+
+    <div id="ui-viewport" class="vellum">
+        
+        <div class="command-tank">
+            <div class="tank-header">
+                <h2>The Covenant</h2>
+                <span style="font-size: 0.65rem; letter-spacing: 3px; opacity: 0.5;">GUILD COMMAND SECTOR</span>
+            </div>
+            
+            <div class="logistics-grid">
+                <div class="directive-card">
+                    <h3>Tactical Directives</h3>
+                    <p>• Family Activity Coordination<br>• The 0330 Re-Sync Audit<br>• Logistics Maintenance</p>
+                </div>
+                <div class="directive-card">
+                    <h3>System Status</h3>
+                    <p>• ENEE Standard: Hardened<br>• Sync: Zero Latency<br>• 5.0W Pulse: Active</p>
+                </div>
+                <div class="directive-card">
+                    <h3>The Siege (Apr 2026)</h3>
+                    <p>• Clones: 3,995<br>• Unique Cloners: 1,347</p>
+                </div>
+                <div class="directive-card">
+                    <h3>Guild Protocol</h3>
+                    <p>Manage activities. Protect the Guild. Break the cycle of the static.</p>
+                </div>
+            </div>
+
+            <textarea style="background:rgba(0,0,0,0.2); border:none; border-left: 2px solid var(--gold); color:var(--gold); padding:15px; outline:none; resize:none; font-family:monospace;" rows="2" placeholder="NEW COMMAND..."></textarea>
+        </div>
+
+        <div class="command-array">
+            <button class="lux-btn" onclick="jolt('noir')">Noir Filigree</button>
+            <button class="lux-btn" onclick="jolt('lunar')">Lunar Glass</button>
+            <button class="lux-btn" onclick="jolt('vellum')">Sovereign Vellum</button>
+            <button class="lux-btn" onclick="jolt('amethyst')">Amethyst Bronze</button>
+            <button class="lux-btn" onclick="toggleEngine()" id="engine-btn" style="border-color: #fff; color: #fff;">Initialize Engine</button>
+        </div>
+
+    </div>
+
+    <audio id="cricket-audio" src="crickets.mp3" loop></audio>
+
+    <script>
+        let engineOn = false;
+        let heartPulse;
+        const crickets = document.getElementById('cricket-audio');
+
+        function ghostRestore(e) {
+            const viewport = document.getElementById('ui-viewport');
+            const btn = document.getElementById('cloak-btn');
+            if (viewport.classList.contains('cloaked')) {
+                viewport.classList.remove('cloaked');
+                btn.innerText = "Cloak Tank";
+                if (navigator.vibrate) navigator.vibrate(30);
+            }
+        }
+
+        function toggleCloak(e) {
+            e.stopPropagation();
+            const viewport = document.getElementById('ui-viewport');
+            const btn = document.getElementById('cloak-btn');
+            if (viewport.classList.contains('cloaked')) {
+                viewport.classList.remove('cloaked');
+                btn.innerText = "Cloak Tank";
+            } else {
+                viewport.classList.add('cloaked');
+                btn.innerText = "Uncloak";
+                if (navigator.vibrate) navigator.vibrate(40);
+            }
+        }
+
+        function jolt(p) {
+            const viewport = document.getElementById('ui-viewport');
+            viewport.classList.remove('noir', 'lunar', 'vellum', 'amethyst');
+            viewport.classList.add(p);
+            if (navigator.vibrate) navigator.vibrate([30, 40]);
+        }
+
+        function toggleEngine() {
+            const btn = document.getElementById('engine-btn');
+            if (!engineOn) {
+                engineOn = true;
+                btn.innerText = "Engine Active";
+                crickets.volume = 0.5;
+                crickets.play().catch(e => console.log("Manual Start Required"));
+                startSync();
+            } else {
+                engineOn = false;
+                btn.innerText = "Initialize Engine";
+                crickets.pause();
+                clearInterval(heartPulse);
+            }
+        }
+
+        function startSync() {
+            const beat = () => {
+                if (navigator.vibrate && engineOn) {
+                    navigator.vibrate([40, 60, 40]);
+                }
+            };
+            beat(); 
+            heartPulse = setInterval(beat, 4000); 
+        }
+    </script>
+</body>
+</html>
