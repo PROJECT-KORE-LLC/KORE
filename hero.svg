@@ -1,24 +1,25 @@
 <svg width="800" height="400" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
   <style>
     @keyframes breathe {
-      0% { stroke-opacity: 0.3; stroke-width: 1.5; }
-      100% { stroke-opacity: 1; stroke-width: 2.5; }
+      0% { stroke-opacity: 0.2; stroke-width: 1.5; }
+      100% { stroke-opacity: 1; stroke-width: 3.5; }
     }
     .glass-frame {
-      animation: breathe 4s infinite alternate ease-in-out;
+      animation: breathe 5s infinite alternate ease-in-out;
     }
     .title-text {
       font-family: 'Segoe UI', Arial, sans-serif;
-      font-size: 42px;
+      font-size: 44px;
       fill: #D4AF37;
       letter-spacing: 15px;
       font-weight: 300;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
     }
   </style>
 
-  <image href="atrium_8k.webp" width="800" height="400" preserveAspectRatio="xMidYMid slice" />
+  <image href="https://raw.githubusercontent.com/akasiamoon/Project-KORE-Vanguard/main/atrium_8k.webp" width="800" height="400" preserveAspectRatio="xMidYMid slice" />
 
-  <rect x="150" y="140" width="500" height="120" fill="#08080A" fill-opacity="0.85" stroke="#D4AF37" stroke-width="2" class="glass-frame" />
+  <rect x="125" y="140" width="550" height="120" fill="#08080A" fill-opacity="0.8" stroke="#D4AF37" stroke-width="2" class="glass-frame" />
 
   <text x="400" y="215" text-anchor="middle" class="title-text">PROJECT KORE</text>
 </svg>
