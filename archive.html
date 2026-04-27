@@ -33,29 +33,22 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #020204 url('gallery_8k.webp') no-repeat center center;
             background-size: cover; z-index: 1;
-            /* TRANSFORM-ONLY: This triggers the hardware backing store */
             animation: flatlineBreath var(--unison-tempo) infinite alternate var(--unison-ease);
             will-change: transform; transform: translateZ(0);
         }
         @keyframes flatlineBreath { 0% { transform: scale(1) translateZ(0); } 100% { transform: scale(1.08) translateZ(0); } }
 
-       /* --- LAYER 2: SOMATIC HIJACK (INTENSIFIED VIGNETTE) --- */
-#glow-layer {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    /* Gradient starts earlier (10%) and hits harder (Pax Amber at 80%) */
-    background: radial-gradient(circle at center, transparent 10%, var(--hijack-glow) 80%, var(--hijack-glow) 100%);
-    z-index: 5; pointer-events: none;
-    animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
-    will-change: opacity;
-    /* Increased Base and Peak Opacity */
-    opacity: 0.15;
-    transition: background 1.5s var(--unison-ease);
-}
+        /* --- LAYER 2: SOMATIC HIJACK (INTENSIFIED VIGNETTE) --- */
+        #glow-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 10%, var(--hijack-glow) 80%, var(--hijack-glow) 100%);
+            z-index: 5; pointer-events: none;
+            animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
+            will-change: opacity; opacity: 0.15;
+            transition: background 1.5s var(--unison-ease);
+        }
+        @keyframes flatlineGlow { 0% { opacity: 0.15; } 100% { opacity: 0.75; } }
 
-@keyframes flatlineGlow { 
-    0% { opacity: 0.15; } 
-    100% { opacity: 0.75; } /* UNDENIABLE PEAK */
-}
         /* --- UI VIEWPORT --- */
         #ui-viewport {
             position: relative; z-index: 100;
@@ -78,17 +71,13 @@
             transition: all 1s var(--unison-ease);
         }
 
-        .vault-header {
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 20px;
-        }
+        .vault-header { border-bottom: 2px solid var(--primary); padding-bottom: 20px; }
         .vault-header h2 { 
             margin: 0; font-size: 1.5rem; letter-spacing: 16px; 
             text-transform: uppercase; font-weight: normal; color: var(--primary);
             text-shadow: 0 0 15px var(--primary-glow);
         }
 
-        /* THE ANNALS (Invisible Scroll) */
         .annals-body {
             flex: 1; overflow-y: auto;
             font-family: 'Georgia', serif; line-height: 2.2;
@@ -98,7 +87,6 @@
         }
         .annals-body::-webkit-scrollbar { display: none; }
 
-        /* LORE INPUT (Obsidian Interface) */
         .lore-input {
             background: rgba(0,0,0,0.3); border: none;
             border-left: 2px solid var(--primary);
@@ -119,7 +107,6 @@
         }
         .lux-btn:hover { background: var(--primary-glow); }
 
-        /* GHOST TRIGGER */
         #cloak-btn {
             position: fixed; top: 35px; right: 35px; z-index: 2000;
             background: none; border: 1px solid var(--primary);
@@ -159,8 +146,30 @@
         </div>
     </div>
 
+    <audio id="wind-atmosphere" src="winterwind.mp3" loop></audio>
+
     <script>
+        let atmosphereArmed = false;
+        const wind = document.getElementById('wind-atmosphere');
+
+        // --- THE SOVEREIGN HANDSHAKE (Universal Trigger) ---
+        function armAtmosphere() {
+            if (!atmosphereArmed) {
+                wind.volume = 0.3;
+                wind.play()
+                    .then(() => {
+                        atmosphereArmed = true;
+                        console.log("📂 Atmosphere Online: Handshake Success.");
+                    })
+                    .catch(e => console.log("Handshake Pending User Strike..."));
+            }
+        }
+
+        // Catch the FIRST touch anywhere on the rig
+        document.body.addEventListener('click', armAtmosphere, { once: true });
+
         function jolt(palette) {
+            armAtmosphere(); // Redundant check
             const body = document.getElementById('master-body');
             body.classList.remove('noir-mode', 'lunar-mode', 'vellum-mode', 'amethyst-mode');
             if (palette !== 'default') body.classList.add(`${palette}-mode`);
@@ -168,6 +177,7 @@
         }
 
         function commitLore() {
+            armAtmosphere(); // Redundant check
             const input = document.getElementById('lore-editor');
             const annals = document.getElementById('annals');
             if (input.value.trim() !== "") {
@@ -182,6 +192,7 @@
 
         function toggleCloak(e) {
             e.stopPropagation();
+            armAtmosphere();
             const viewport = document.getElementById('ui-viewport');
             const isCloaked = viewport.classList.toggle('cloaked');
             document.getElementById('cloak-btn').innerText = isCloaked ? "RESTORE LEDGER" : "CLOAK LEDGER";
