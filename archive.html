@@ -3,243 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROJECT KORE // THE ARCHIVE [FINAL_BUILD_SHELL]</title>
+    <title>PROJECT KORE // THE ARCHIVE</title>
     <style>
         :root {
-            --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.3);
-            --pax-amber: rgba(229, 149, 0, 0.4);
-            --glass-base: rgba(8, 8, 10, 0.9);
-            --tempo: 4s; 
+            /* UNIVERSAL PALETTE MANIFEST (GROUND TRUTH: NOIR) */
+            --primary: #D4AF37; 
+            --primary-glow: rgba(212, 175, 55, 0.35);
+            --hijack-glow: rgba(229, 149, 0, 0.6);
+            --glass: rgba(6, 6, 8, 0.98);
+            --unison-tempo: 8s;
+            --unison-ease: cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
+
+        /* --- THE SOVEREIGN JOLT ARRAY --- */
+        .noir-mode { --primary: #D4AF37; --hijack-glow: rgba(229, 149, 0, 0.6); --glass: rgba(6, 6, 8, 0.98); }
+        .lunar-mode { --primary: #A5F2F3; --hijack-glow: rgba(0, 80, 150, 0.5); --glass: rgba(4, 8, 12, 0.98); }
+        .vellum-mode { --primary: #C2B280; --hijack-glow: rgba(101, 67, 33, 0.5); --glass: rgba(12, 10, 8, 0.98); }
+        .amethyst-mode { --primary: #9966CC; --hijack-glow: rgba(75, 0, 130, 0.5); --glass: rgba(10, 6, 12, 0.98); }
 
         body, html {
-            margin: 0; padding: 0;
-            background: #020204;
-            overflow: hidden;
-            font-family: 'Times New Roman', serif;
-            height: 100%; width: 100%;
-            color: #F4EBD0;
+            margin: 0; padding: 0; background: #000;
+            overflow: hidden; font-family: 'Times New Roman', serif;
+            height: 100%; width: 100%; color: #F4EBD0;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- THE HEARTH (Layer 1 - BACKGROUND) --- */
+        /* --- LAYER 1: THE HEARTH (8K GALLERY BREATH) --- */
         #bg-anchor {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('gallery_8k.webp') no-repeat center center;
-            background-size: cover;
-            z-index: 1;
-            transform: scale(1.15);
-            animation: imageBreathe var(--tempo) infinite alternate ease-in-out;
-            will-change: transform;
-            cursor: default;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020204 url('gallery_8k.webp') no-repeat center center;
+            background-size: cover; z-index: 1;
+            /* TRANSFORM-ONLY: This triggers the hardware backing store */
+            animation: flatlineBreath var(--unison-tempo) infinite alternate var(--unison-ease);
+            will-change: transform; transform: translateZ(0);
         }
+        @keyframes flatlineBreath { 0% { transform: scale(1) translateZ(0); } 100% { transform: scale(1.08) translateZ(0); } }
 
-        @keyframes imageBreathe { 
-            0% { transform: scale(1.15); } 100% { transform: scale(1.2); } 
-        }
-
-        /* --- SOMATIC HIJACK (Layer 2 - RECALIBRATED) --- */
+        /* --- LAYER 2: SOMATIC HIJACK (LIQUID VIGNETTE) --- */
         #glow-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--pax-amber);
-            z-index: 5;
-            pointer-events: none;
-            opacity: 0.1;
-            animation: somaticBreathe var(--tempo) infinite alternate ease-in-out;
-            will-change: opacity;
-            /* ENEE OPTIMIZATION: 8px Blur */
-            backdrop-filter: sepia(5%) brightness(0.98) blur(8px); 
-            -webkit-backdrop-filter: sepia(5%) brightness(0.98) blur(8px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 25%, var(--hijack-glow) 130%);
+            z-index: 5; pointer-events: none;
+            /* OPACITY-ONLY: Handled by compositor thread */
+            animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
+            will-change: opacity; opacity: 0.1;
+            transition: background 1.5s var(--unison-ease);
         }
+        @keyframes flatlineGlow { 0% { opacity: 0.1; } 100% { opacity: 0.6; } }
 
-        @keyframes somaticBreathe { 
-            0% { opacity: 0.1; } 100% { opacity: 0.45; } 
-        }
-
-        /* --- THE UI VIEWPORT --- */
+        /* --- UI VIEWPORT --- */
         #ui-viewport {
-            position: relative;
-            z-index: 100;
+            position: relative; z-index: 100;
             height: 100vh; width: 100%;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            padding: 40px; box-sizing: border-box;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 1.0s ease;
+            padding: 20px; box-sizing: border-box;
+            transition: opacity 1.5s var(--unison-ease);
         }
+        .cloaked { opacity: 0 !important; pointer-events: none !important; }
 
-        /* --- GHOST MODE STATE --- */
-        .cloaked {
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-
-        /* --- THE LUXURY VAULT (Layer 3 - RECALIBRATED) --- */
+        /* --- THE ARCHIVE VAULT (Massive Mass) --- */
         .archive-vault {
-            width: 100%; max-width: 1000px;
-            /* ENEE OPTIMIZATION: 15px Blur + Higher Opacity */
-            background: rgba(8, 8, 10, 0.88);
-            backdrop-filter: blur(15px) saturate(110%);
-            -webkit-backdrop-filter: blur(15px) saturate(110%);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            padding: 50px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 0 25px var(--gold-glow);
+            width: 95%; max-width: 950px; height: 80vh;
+            background: var(--glass);
+            border: 2px solid var(--primary);
+            padding: 45px; box-sizing: border-box;
             display: flex; flex-direction: column; gap: 30px;
+            box-shadow: 0 0 100px #000, inset 0 0 40px var(--primary-glow);
+            transition: all 1s var(--unison-ease);
         }
 
-        .vault-header h2 {
-            margin: 0; font-size: 1.8rem; letter-spacing: 12px;
-            text-transform: uppercase; color: var(--gold);
-            text-shadow: 0 0 15px var(--gold-glow);
+        .vault-header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+        }
+        .vault-header h2 { 
+            margin: 0; font-size: 1.5rem; letter-spacing: 16px; 
+            text-transform: uppercase; font-weight: normal; color: var(--primary);
+            text-shadow: 0 0 15px var(--primary-glow);
         }
 
+        /* THE ANNALS (Invisible Scroll) */
         .annals-body {
-            height: 250px; overflow-y: auto;
-            font-family: 'Georgia', serif; line-height: 2.0;
-            padding-right: 25px; font-size: 1.05rem;
+            flex: 1; overflow-y: auto;
+            font-family: 'Georgia', serif; line-height: 2.2;
+            padding-right: 25px; font-size: 1.1rem;
             color: rgba(244, 235, 208, 0.85);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            scrollbar-width: none;
+        }
+        .annals-body::-webkit-scrollbar { display: none; }
+
+        /* LORE INPUT (Obsidian Interface) */
+        .lore-input {
+            background: rgba(0,0,0,0.3); border: none;
+            border-left: 2px solid var(--primary);
+            color: var(--primary); padding: 20px;
+            outline: none; resize: none; font-family: monospace;
+            font-size: 0.95rem; transition: border 0.5s;
         }
 
-        /* --- THE COMMAND ARRAY --- */
+        /* --- COMMAND ARRAY --- */
         .command-array {
-            margin-top: 50px;
-            display: flex; gap: 20px;
-            flex-wrap: wrap; justify-content: center;
+            margin-top: 40px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
         }
-
         .lux-btn {
-            background: rgba(8, 8, 10, 0.9);
-            border: 1px solid rgba(212, 175, 55, 0.6);
-            color: var(--gold);
-            padding: 12px 28px; cursor: pointer;
-            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            background: rgba(0,0,0,0.6); border: 1px solid var(--primary);
+            color: var(--primary); padding: 12px 28px; cursor: pointer;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 5px;
+            transition: 0.4s;
         }
+        .lux-btn:hover { background: var(--primary-glow); }
 
-        .lux-btn:hover { background: var(--gold); color: #000; }
-
-        /* THE GHOST TRIGGER */
+        /* GHOST TRIGGER */
         #cloak-btn {
-            position: fixed;
-            top: 30px; right: 30px;
-            z-index: 2000;
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(212, 175, 55, 0.2);
-            color: var(--gold); padding: 12px 20px;
-            cursor: pointer; font-size: 0.65rem; letter-spacing: 3px;
-            text-transform: uppercase;
-            transition: all 0.4s;
-            backdrop-filter: blur(5px);
+            position: fixed; top: 35px; right: 35px; z-index: 2000;
+            background: none; border: 1px solid var(--primary);
+            color: var(--primary); padding: 10px 22px; cursor: pointer; 
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 5px;
+            backdrop-filter: blur(5px); transition: all 1s;
         }
-        #cloak-btn:hover { border-color: var(--gold); background: rgba(0,0,0,0.8); }
-
-        /* PALETTE ALIGNMENTS */
-        .noir { filter: contrast(1.1) brightness(0.9) sepia(0.1); }
-        .lunar { filter: contrast(0.9) brightness(1.15) hue-rotate(180deg) saturate(0.5); }
-        .vellum { filter: sepia(0.45) brightness(1.0) contrast(1.05); }
-        .amethyst { filter: hue-rotate(270deg) brightness(0.9) saturate(1.1); }
-
     </style>
 </head>
-<body onclick="ghostRestore(event)">
+<body id="master-body" onclick="ghostRestore()">
 
-    <button id="cloak-btn" onclick="toggleCloak(event)">Cloak Ledger</button>
+    <button id="cloak-btn" onclick="toggleCloak(event)">CLOAK LEDGER</button>
 
     <div id="bg-anchor"></div>
     <div id="glow-layer"></div>
 
-    <div id="ui-viewport" class="vellum">
-        
+    <div id="ui-viewport">
         <div class="archive-vault">
             <div class="vault-header">
                 <h2>The Archive</h2>
-                <span style="font-size: 0.7rem; letter-spacing: 4px; opacity: 0.5;">SOVEREIGN SOMATIC MEMORY</span>
+                <span style="font-size: 0.55rem; opacity: 0.4; letter-spacing: 6px;">SOVEREIGN SOMATIC MEMORY</span>
             </div>
             
-            <div class="annals-body">
+            <div class="annals-body" id="annals">
                 <p><em>> Awaiting the Architect's Lore...</em></p>
             </div>
 
-            <textarea style="background:rgba(0,0,0,0.2); border:none; border-left: 2px solid var(--gold); color:var(--gold); padding:15px; outline:none; resize:none; font-family:monospace;" rows="2" placeholder="RECORD THE LORE..."></textarea>
+            <textarea class="lore-input" id="lore-editor" rows="3" placeholder="RECORD THE LORE..."></textarea>
         </div>
 
         <div class="command-array">
-            <button class="lux-btn" onclick="jolt('noir')">Noir Filigree</button>
-            <button class="lux-btn" onclick="jolt('lunar')">Lunar Glass</button>
-            <button class="lux-btn" onclick="jolt('vellum')">Sovereign Vellum</button>
-            <button class="lux-btn" onclick="jolt('amethyst')">Amethyst Bronze</button>
-            <button class="lux-btn" onclick="toggleEngine()" id="engine-btn" style="border-color: #fff; color: #fff;">Initialize Engine</button>
+            <button class="lux-btn" onclick="jolt('noir')">Noir</button>
+            <button class="lux-btn" onclick="jolt('lunar')">Lunar</button>
+            <button class="lux-btn" onclick="jolt('vellum')">Vellum</button>
+            <button class="lux-btn" onclick="jolt('amethyst')">Amethyst</button>
+            <button class="lux-btn" onclick="commitLore()" style="border-color: #fff; color: #fff;">Commit Lore</button>
         </div>
-
     </div>
 
-    <audio id="wind-audio" src="winterwind.mp3" loop></audio>
-
     <script>
-        let active = false;
-        let pulse;
-        const wind = document.getElementById('wind-audio');
+        function jolt(palette) {
+            const body = document.getElementById('master-body');
+            body.classList.remove('noir-mode', 'lunar-mode', 'vellum-mode', 'amethyst-mode');
+            if (palette !== 'default') body.classList.add(`${palette}-mode`);
+            if (navigator.vibrate) navigator.vibrate(20);
+        }
 
-        function ghostRestore(e) {
-            const viewport = document.getElementById('ui-viewport');
-            const btn = document.getElementById('cloak-btn');
-            
-            if (viewport.classList.contains('cloaked')) {
-                viewport.classList.remove('cloaked');
-                btn.innerText = "Cloak Ledger";
-                if (navigator.vibrate) navigator.vibrate(30);
-                console.log("📂 Ledger Restored via Ghost Handshake.");
+        function commitLore() {
+            const input = document.getElementById('lore-editor');
+            const annals = document.getElementById('annals');
+            if (input.value.trim() !== "") {
+                const p = document.createElement('p');
+                p.textContent = `> ${input.value}`;
+                annals.appendChild(p);
+                input.value = "";
+                annals.scrollTop = annals.scrollHeight;
+                if (navigator.vibrate) navigator.vibrate([30, 50]);
             }
         }
 
         function toggleCloak(e) {
             e.stopPropagation();
             const viewport = document.getElementById('ui-viewport');
-            const btn = document.getElementById('cloak-btn');
-            
+            const isCloaked = viewport.classList.toggle('cloaked');
+            document.getElementById('cloak-btn').innerText = isCloaked ? "RESTORE LEDGER" : "CLOAK LEDGER";
+        }
+
+        function ghostRestore() {
+            const viewport = document.getElementById('ui-viewport');
             if (viewport.classList.contains('cloaked')) {
                 viewport.classList.remove('cloaked');
-                btn.innerText = "Cloak Ledger";
-            } else {
-                viewport.classList.add('cloaked');
-                btn.innerText = "Uncloak";
-                if (navigator.vibrate) navigator.vibrate(40);
+                document.getElementById('cloak-btn').innerText = "CLOAK LEDGER";
             }
-        }
-
-        function jolt(p) {
-            const viewport = document.getElementById('ui-viewport');
-            // SURGICAL CLASS UPDATE
-            viewport.classList.remove('noir', 'lunar', 'vellum', 'amethyst');
-            viewport.classList.add(p);
-            if (navigator.vibrate) navigator.vibrate([30, 40]);
-        }
-
-        function toggleEngine() {
-            const btn = document.getElementById('engine-btn');
-            if (!active) {
-                active = true;
-                btn.innerText = "Engine Active";
-                wind.volume = 0.4;
-                wind.play();
-                startSync();
-            } else {
-                active = false;
-                btn.innerText = "Initialize Engine";
-                wind.pause();
-                clearInterval(pulse);
-            }
-        }
-
-        function startSync() {
-            const heartbeat = () => {
-                if (navigator.vibrate && active) {
-                    navigator.vibrate([40, 60, 40]);
-                }
-            };
-            heartbeat(); 
-            pulse = setInterval(heartbeat, 4000); 
         }
     </script>
 </body>
