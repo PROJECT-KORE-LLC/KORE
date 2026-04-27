@@ -11,7 +11,6 @@ const ASSETS = [
     'hearth.html',
     'gallery.html',
     'resonance.html',
-    'manifest.json',
     'audio-engine.js',
     'kore-logo.png',
 
