@@ -1,274 +1,285 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROJECT KORE // THE COVENANT [CRICKET_SYNC_SHELL]</title>
+    <title>PROJECT KORE // COVENANT COMMAND</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
-            --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.3);
-            --pax-amber: rgba(229, 149, 0, 0.4);
-            --glass-base: rgba(8, 8, 10, 0.9);
-            --tempo: 4s; 
+            --primary: #D4AF37; 
+            --primary-glow: rgba(212, 175, 55, 0.4);
+            --hijack-glow: rgba(229, 149, 0, 0.6);
+            --glass: rgba(6, 6, 8, 0.98);
+            --unison-tempo: 8s;
+            --unison-ease: cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .noir-mode { --primary: #D4AF37; --hijack-glow: rgba(229, 149, 0, 0.6); }
+        .lunar-mode { --primary: #A5F2F3; --hijack-glow: rgba(0, 80, 150, 0.5); }
+        .vellum-mode { --primary: #C2B280; --hijack-glow: rgba(101, 67, 33, 0.5); }
 
         body, html {
-            margin: 0; padding: 0;
-            background: #020204;
-            overflow: hidden;
-            font-family: 'Times New Roman', serif;
-            height: 100%; width: 100%;
-            color: #F4EBD0;
+            margin: 0; padding: 0; background: #000;
+            overflow: hidden; font-family: 'Times New Roman', serif;
+            height: 100%; width: 100%; color: #F4EBD0;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- THE HEARTH (Layer 1 - BACKGROUND) --- */
+        /* --- THE HEARTH --- */
         #bg-anchor {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('logistics_8k.webp') no-repeat center center;
-            background-size: cover;
-            z-index: 1;
-            transform: scale(1.15);
-            animation: imageBreathe var(--tempo) infinite alternate ease-in-out;
-            will-change: transform;
-            cursor: default;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020204 url('logistics_8k.webp') no-repeat center center;
+            background-size: cover; z-index: 1;
+            animation: flatlineBreath var(--unison-tempo) infinite alternate var(--unison-ease);
+            will-change: transform; transform: translateZ(0);
         }
+        @keyframes flatlineBreath { 0% { transform: scale(1.1); } 100% { transform: scale(1.16); } }
 
-        @keyframes imageBreathe { 
-            0% { transform: scale(1.15); } 100% { transform: scale(1.2); } 
-        }
-
-        /* --- SOMATIC HIJACK (Layer 2 - ENEE HARDENED) --- */
         #glow-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--pax-amber);
-            z-index: 5;
-            pointer-events: none;
-            opacity: 0.1;
-            animation: somaticBreathe var(--tempo) infinite alternate ease-in-out;
-            will-change: opacity;
-            backdrop-filter: sepia(5%) brightness(0.98) blur(8px); 
-            -webkit-backdrop-filter: sepia(5%) brightness(0.98) blur(8px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 15%, var(--hijack-glow) 100%);
+            z-index: 5; pointer-events: none;
+            animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
+            will-change: opacity; opacity: 0.15;
+        }
+        @keyframes flatlineGlow { 0% { opacity: 0.15; } 100% { opacity: 0.75; } }
+
+        /* --- THE SOMATIC GATE --- */
+        #handshake-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 2000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            backdrop-filter: blur(40px); transition: opacity 1.2s var(--unison-ease), visibility 1.2s;
+        }
+        #handshake-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .handshake-input-wrap {
+            position: relative; border-bottom: 2px solid var(--primary);
+            padding: 10px; width: 280px; text-align: center;
+        }
+        .handshake-input-wrap input {
+            background: transparent; border: none; color: var(--primary);
+            text-align: center; font-size: 2rem; letter-spacing: 15px;
+            outline: none; width: 100%; font-family: monospace;
+            -webkit-text-security: disc;
+        }
+        .gate-label {
+            font-size: 0.55rem; letter-spacing: 6px; color: var(--primary);
+            opacity: 0.4; margin-bottom: 20px; text-transform: uppercase;
         }
 
-        @keyframes somaticBreathe { 
-            0% { opacity: 0.1; } 100% { opacity: 0.45; } 
-        }
-
-        /* --- THE UI VIEWPORT --- */
+        /* --- COMMAND VIEWPORT --- */
         #ui-viewport {
-            position: relative;
-            z-index: 100;
+            position: relative; z-index: 100;
             height: 100vh; width: 100%;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            padding: 40px; box-sizing: border-box;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 1.0s ease;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box;
+            transition: opacity 2s var(--unison-ease), transform 2s var(--unison-ease);
+            opacity: 0; transform: scale(0.98);
         }
+        #ui-viewport.active { opacity: 1; transform: scale(1); }
 
-        .cloaked {
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-
-        /* --- THE COMMAND TANK (Layer 3 - 15px LUX GLASS) --- */
         .command-tank {
-            width: 100%; max-width: 1000px;
-            background: rgba(8, 8, 10, 0.88);
-            backdrop-filter: blur(15px) saturate(110%);
-            -webkit-backdrop-filter: blur(15px) saturate(110%);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            padding: 45px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 0 25px var(--gold-glow);
-            display: flex; flex-direction: column; gap: 25px;
+            width: 98%; max-width: 1300px; height: 92vh;
+            background: var(--glass); border: 2px solid var(--primary);
+            padding: 25px; box-sizing: border-box;
+            display: grid; grid-template-rows: auto 1fr auto; gap: 20px;
+            box-shadow: 0 0 100px #000, inset 0 0 40px var(--primary-glow);
+            backdrop-filter: blur(15px);
         }
 
-        .tank-header {
-            border-bottom: 1px solid var(--gold);
-            padding-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: baseline;
+        .tank-header { border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .matrix-nav { display: flex; gap: 15px; }
+        .nav-arrow { background: none; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 4px 12px; font-size: 0.7rem; }
+        
+        .core-grid { display: grid; grid-template-columns: 310px 1fr 310px; gap: 20px; min-height: 0; }
+        .sector { border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.01); min-height: 0; contain: content; }
+        .sector h3 { margin: 0 0 10px 0; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--primary); border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 5px; }
+
+        .feed-box { flex: 1; overflow-y: auto; scrollbar-width: none; }
+        .feed-box::-webkit-scrollbar { display: none; }
+        .entry { margin-bottom: 10px; font-size: 0.8rem; border-left: 2px solid rgba(212, 175, 55, 0.15); padding-left: 10px; line-height: 1.4; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+        .cal-day {
+            background: rgba(255,255,255,0.01); border: 1px solid rgba(212, 175, 55, 0.08);
+            display: flex; flex-direction: column; padding: 6px; font-size: 0.6rem; color: rgba(212, 175, 55, 0.25);
+            cursor: pointer; position: relative;
         }
+        .cal-day.active-node { border-color: var(--primary); background: rgba(212, 175, 55, 0.08); color: #fff; }
+        .cal-day.today { border-color: #fff; color: #fff; }
+        .cal-day.has-data::after { content: '•'; color: var(--primary); font-size: 1.2rem; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); }
 
-        .tank-header h2 {
-            margin: 0; font-size: 1.6rem; letter-spacing: 10px;
-            text-transform: uppercase; color: var(--gold);
-            text-shadow: 0 0 15px var(--gold-glow);
-        }
+        .tank-footer { border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .dispatch-cluster { display: flex; gap: 15px; align-items: stretch; }
+        .target-selector { display: flex; flex-direction: column; gap: 5px; width: 140px; }
+        .target-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2); color: var(--primary); font-size: 0.5rem; padding: 6px; cursor: pointer; letter-spacing: 2px; }
+        .target-btn.active { border-color: var(--primary); background: var(--primary-glow); }
+        .command-input { flex: 1; background: rgba(0,0,0,0.2); border: none; border-left: 2px solid var(--primary); color: var(--primary); padding: 12px; font-family: monospace; outline: none; resize: none; font-size: 0.9rem; }
+        .exec-btn { width: 100px; background: #000; border: 1px solid #fff; color: #fff; text-transform: uppercase; letter-spacing: 3px; font-size: 0.65rem; cursor: pointer; }
 
-        /* LOGISTICS GRID */
-        .logistics-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-            height: 220px; overflow-y: auto;
-            font-family: 'Georgia', serif; padding-right: 15px;
-        }
-
-        .directive-card {
-            background: rgba(212, 175, 55, 0.03);
-            border-left: 2px solid var(--gold);
-            padding: 12px;
-        }
-
-        .directive-card h3 {
-            margin: 0 0 8px 0; font-size: 0.75rem; letter-spacing: 2px;
-            color: var(--gold); text-transform: uppercase;
-        }
-
-        .directive-card p {
-            margin: 0; font-size: 0.85rem; line-height: 1.6;
-            color: rgba(244, 235, 208, 0.8);
-        }
-
-        /* --- THE COMMAND ARRAY --- */
-        .command-array {
-            margin-top: 40px;
-            display: flex; gap: 15px;
-            flex-wrap: wrap; justify-content: center;
-        }
-
-        .lux-btn {
-            background: rgba(8, 8, 10, 0.95);
-            border: 1px solid rgba(212, 175, 55, 0.6);
-            color: var(--gold);
-            padding: 10px 24px; cursor: pointer;
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 4px;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .lux-btn:hover { background: var(--gold); color: #000; }
-
-        /* THE GHOST TRIGGER */
-        #cloak-btn {
-            position: fixed;
-            top: 25px; right: 25px;
-            z-index: 2000;
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2);
-            color: var(--gold); padding: 10px 18px;
-            cursor: pointer; font-size: 0.6rem; letter-spacing: 3px;
-            text-transform: uppercase;
-            backdrop-filter: blur(8px);
-        }
-
-        /* PALETTE ALIGNMENTS */
-        .noir { filter: contrast(1.1) brightness(0.9) sepia(0.1); }
-        .lunar { filter: contrast(0.9) brightness(1.15) hue-rotate(180deg) saturate(0.5); }
-        .vellum { filter: sepia(0.45) brightness(1.0) contrast(1.05); }
-        .amethyst { filter: hue-rotate(270deg) brightness(0.9) saturate(1.1); }
-
+        .jolt-bar { display: flex; gap: 10px; justify-content: center; }
+        .lux-btn { background: rgba(0,0,0,0.6); border: 1px solid var(--primary); color: var(--primary); padding: 6px 18px; cursor: pointer; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 4px; }
     </style>
 </head>
-<body onclick="ghostRestore(event)">
+<body id="master-body">
 
-    <button id="cloak-btn" onclick="toggleCloak(event)">Cloak Tank</button>
+    <div id="handshake-overlay">
+        <div class="gate-label">Initialize Sovereign Handshake</div>
+        <div class="handshake-input-wrap">
+            <input type="text" id="passphrase-input" maxlength="6" autofocus spellcheck="false" autocomplete="off">
+        </div>
+        <div style="margin-top:40px; font-size:0.5rem; opacity:0.3; letter-spacing:4px;">PROMPT: A1B2C3</div>
+    </div>
 
     <div id="bg-anchor"></div>
     <div id="glow-layer"></div>
 
-    <div id="ui-viewport" class="vellum">
-        
+    <div id="ui-viewport">
         <div class="command-tank">
-            <div class="tank-header">
-                <h2>The Covenant</h2>
-                <span style="font-size: 0.65rem; letter-spacing: 3px; opacity: 0.5;">GUILD COMMAND SECTOR</span>
-            </div>
-            
-            <div class="logistics-grid">
-                <div class="directive-card">
-                    <h3>Tactical Directives</h3>
-                    <p>• Family Activity Coordination<br>• The 0330 Re-Sync Audit<br>• Logistics Maintenance</p>
+            <header class="tank-header">
+                <div class="matrix-nav">
+                    <button class="nav-arrow" onclick="changeMonth(-1)"><</button>
+                    <h2 id="matrix-month" style="margin:0; letter-spacing:6px; text-transform:uppercase; font-size:1.1rem; color:var(--primary);">Matrix</h2>
+                    <button class="nav-arrow" onclick="changeMonth(1)">></button>
                 </div>
-                <div class="directive-card">
-                    <h3>System Status</h3>
-                    <p>• ENEE Standard: Hardened<br>• Sync: Zero Latency<br>• 5.0W Pulse: Active</p>
+                <span id="active-date-display" style="font-size: 0.5rem; opacity: 0.5; letter-spacing: 4px;">[ NO NODE ]</span>
+            </header>
+
+            <div class="core-grid">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <section class="sector" style="flex:1.5;"><h3>Directives</h3><div class="feed-box" id="directives-feed"></div></section>
+                    <section class="sector" style="flex:1;"><h3>Temporal Array</h3><div class="feed-box" id="temporal-feed"></div></section>
                 </div>
-                <div class="directive-card">
-                    <h3>The Siege (Apr 2026)</h3>
-                    <p>• Clones: 4,423<br>• Unique Cloners: 1,559</p>
-                </div>
-                <div class="directive-card">
-                    <h3>Guild Protocol</h3>
-                    <p>Manage activities. Protect the Guild. Break the cycle of the static.</p>
+                <main class="sector"><h3>Temporal Matrix</h3><div class="calendar-grid" id="calendar-matrix"></div></main>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <section class="sector" style="flex:1;"><h3>Important</h3><div class="feed-box" id="important-feed"></div></section>
+                    <section class="sector" style="flex:1.5;"><h3>Notes</h3><div class="feed-box" id="notes-feed"></div></section>
                 </div>
             </div>
 
-            <textarea style="background:rgba(0,0,0,0.2); border:none; border-left: 2px solid var(--gold); color:var(--gold); padding:15px; outline:none; resize:none; font-family:monospace;" rows="2" placeholder="NEW COMMAND..."></textarea>
+            <footer class="tank-footer">
+                <div class="dispatch-cluster">
+                    <div class="target-selector">
+                        <button class="target-btn active" onclick="setTarget('TASK', this)">DIRECTIVE</button>
+                        <button class="target-btn" onclick="setTarget('APPT', this)">TEMPORAL</button>
+                        <button class="target-btn" onclick="setTarget('IMPORTANT', this)">IMPORTANT</button>
+                        <button class="target-btn" onclick="setTarget('NOTE', this)">NOTES</button>
+                    </div>
+                    <textarea class="command-input" id="command-editor" placeholder="DISPATCH..."></textarea>
+                    <button class="exec-btn" onclick="executeCommand()">Execute</button>
+                </div>
+                <div class="jolt-bar">
+                    <button class="lux-btn" onclick="jolt('noir')">Noir</button>
+                    <button class="lux-btn" onclick="jolt('lunar')">Lunar</button>
+                    <button class="lux-btn" onclick="jolt('vellum')">Vellum</button>
+                    <button class="lux-btn" style="opacity:0.4" onclick="exportVeil()">Backup</button>
+                </div>
+            </footer>
         </div>
-
-        <div class="command-array">
-            <button class="lux-btn" onclick="jolt('noir')">Noir Filigree</button>
-            <button class="lux-btn" onclick="jolt('lunar')">Lunar Glass</button>
-            <button class="lux-btn" onclick="jolt('vellum')">Sovereign Vellum</button>
-            <button class="lux-btn" onclick="jolt('amethyst')">Amethyst Bronze</button>
-            <button class="lux-btn" onclick="toggleEngine()" id="engine-btn" style="border-color: #fff; color: #fff;">Initialize Engine</button>
-        </div>
-
     </div>
 
-    <audio id="cricket-audio" src="crickets.mp3" loop></audio>
-
     <script>
-        let engineOn = false;
-        let heartPulse;
-        const crickets = document.getElementById('cricket-audio');
+        // ##################################################################
+        // !!! SOVEREIGN LINK CONFIGURATION !!!
+        // ##################################################################
+        const SUPABASE_URL = 'https://oqwljgnlhaghnrtkvvkz.supabase.co'; 
+        const SUPABASE_KEY = 'oqwljgnlhaghnrtkvvkz';
+        // ##################################################################
 
-        function ghostRestore(e) {
-            const viewport = document.getElementById('ui-viewport');
-            const btn = document.getElementById('cloak-btn');
-            if (viewport.classList.contains('cloaked')) {
-                viewport.classList.remove('cloaked');
-                btn.innerText = "Cloak Tank";
-                if (navigator.vibrate) navigator.vibrate(30);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const TEST_KEY = "A1B2C3";
+        let currentTarget = "TASK", activeDate = null, matrixState = {}, viewDate = new Date();
+
+        // --- HANDSHAKE ---
+        const gateInput = document.getElementById('passphrase-input');
+        gateInput.addEventListener('input', (e) => {
+            if (e.target.value.toUpperCase() === TEST_KEY) {
+                document.getElementById('handshake-overlay').classList.add('hidden');
+                document.getElementById('ui-viewport').classList.add('active');
+                inhaleVeil();
+            }
+        });
+
+        // --- THE INHALE (Load Data) ---
+        async function inhaleVeil() {
+            const raw = localStorage.getItem('KORE_V1');
+            if (raw) { try { matrixState = JSON.parse(atob(raw)); } catch(e) { matrixState = {}; } }
+            initMatrix();
+
+            const { data, error } = await supabaseClient
+                .from('matrix_ledger')
+                .select('*');
+
+            if (!error && data) {
+                data.forEach(row => {
+                    const date = row.node_date;
+                    if (!matrixState[date]) matrixState[date] = { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
+                    if (!matrixState[date][row.category].includes(row.content)) {
+                        matrixState[date][row.category].push(row.content);
+                    }
+                });
+                initMatrix();
             }
         }
 
-        function toggleCloak(e) {
-            e.stopPropagation();
-            const viewport = document.getElementById('ui-viewport');
-            const btn = document.getElementById('cloak-btn');
-            if (viewport.classList.contains('cloaked')) {
-                viewport.classList.remove('cloaked');
-                btn.innerText = "Cloak Tank";
-            } else {
-                viewport.classList.add('cloaked');
-                btn.innerText = "Uncloak";
-                if (navigator.vibrate) navigator.vibrate(40);
-            }
-        }
-
-        function jolt(p) {
-            const viewport = document.getElementById('ui-viewport');
-            viewport.classList.remove('noir', 'lunar', 'vellum', 'amethyst');
-            viewport.classList.add(p);
-            if (navigator.vibrate) navigator.vibrate([30, 40]);
-        }
-
-        function toggleEngine() {
-            const btn = document.getElementById('engine-btn');
-            if (!engineOn) {
-                engineOn = true;
-                btn.innerText = "Engine Active";
-                crickets.volume = 0.5;
-                crickets.play().catch(e => console.log("Manual Start Required"));
-                startSync();
-            } else {
-                engineOn = false;
-                btn.innerText = "Initialize Engine";
-                crickets.pause();
-                clearInterval(heartPulse);
-            }
-        }
-
-        function startSync() {
-            const beat = () => {
-                if (navigator.vibrate && engineOn) {
-                    navigator.vibrate([40, 60, 40]);
+        // --- MATRIX ENGINE ---
+        function initMatrix() {
+            const grid = document.getElementById('calendar-matrix');
+            const y = viewDate.getFullYear(), m = viewDate.getMonth();
+            document.getElementById('matrix-month').innerText = `${viewDate.toLocaleString('default', {month:'long'})} ${y}`;
+            grid.innerHTML = '';
+            const first = new Date(y, m, 1).getDay();
+            const total = new Date(y, m+1, 0).getDate();
+            for(let i=0; i<first; i++) { const v = document.createElement('div'); v.className='cal-day'; v.style.opacity='0.05'; grid.appendChild(v); }
+            for(let i=1; i<=total; i++) {
+                const dStr = `${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                const d = document.createElement('div'); d.className = 'cal-day';
+                if(i === new Date().getDate() && m === new Date().getMonth()) d.classList.add('today');
+                if(dStr === activeDate) d.classList.add('active-node');
+                if(matrixState[dStr] && (matrixState[dStr].TASK.length || matrixState[dStr].APPT.length || matrixState[dStr].IMPORTANT.length || matrixState[dStr].NOTE.length)) {
+                    d.classList.add('has-data');
                 }
-            };
-            beat(); 
-            heartPulse = setInterval(beat, 4000); 
+                d.innerHTML = `<span>${i}</span>`;
+                d.onclick = () => { activeDate = dStr; document.getElementById('active-date-display').innerText = `[ NODE: ${dStr} ]`; refresh(); initMatrix(); };
+                grid.appendChild(d);
+            }
         }
+
+        function refresh() {
+            const d = matrixState[activeDate] || { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
+            const f = { TASK:'directives-feed', APPT:'temporal-feed', IMPORTANT:'important-feed', NOTE:'notes-feed' };
+            Object.keys(f).forEach(k => {
+                const el = document.getElementById(f[k]); el.innerHTML = '';
+                if(d[k]) d[k].forEach(t => { const div = document.createElement('div'); div.className='entry'; div.innerHTML=t; el.appendChild(div); });
+            });
+        }
+
+        async function executeCommand() {
+            const input = document.getElementById('command-editor');
+            const val = input.value.trim();
+            if(!activeDate || !val) return;
+
+            if(!matrixState[activeDate]) matrixState[activeDate] = { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
+            matrixState[activeDate][currentTarget].push(val);
+            localStorage.setItem('KORE_V1', btoa(JSON.stringify(matrixState)));
+            input.value = ''; refresh(); initMatrix();
+
+            const { error } = await supabaseClient
+                .from('matrix_ledger')
+                .insert([{ node_date: activeDate, category: currentTarget, content: val }]);
+
+            if (error) console.error("Cloud Sync Error:", error.message);
+        }
+
+        function changeMonth(n) { viewDate.setMonth(viewDate.getMonth() + n); initMatrix(); }
+        function setTarget(t, btn) { currentTarget = t; document.querySelectorAll('.target-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); }
+        function jolt(p) { const b = document.getElementById('master-body'); b.className = ''; b.classList.add(`${p}-mode`); }
+        function exportVeil() { const blob = new Blob([btoa(JSON.stringify(matrixState))], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='KORE_LORE.json'; a.click(); }
     </script>
 </body>
 </html>
