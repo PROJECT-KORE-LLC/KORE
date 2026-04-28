@@ -2,110 +2,155 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT KORE // GALLERY_SHELL // CONCEPT ART // TEST 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PROJECT KORE // GALLERY_SHELL // SOVEREIGN 5.0</title>
     <style>
+        /* --- THE GEOMETRY GAVEL --- */
+        *, *::before, *::after { box-sizing: border-box; }
+
         :root {
             --gold-leaf: #D4AF37;
             --pax-amber: rgba(229, 149, 0, 0.4);
-            --glass: rgba(10, 10, 12, 0.85);
-            --tempo: 4s; /* THE PAX STANDARD */
+            --glass: rgba(10, 10, 12, 0.95);
+            --tempo: 4s;
         }
 
         body, html {
             margin: 0; padding: 0;
             background: #050508;
-            overflow: hidden;
+            overflow: hidden; /* HARD STOP on Goliath bounce */
             font-family: 'Times New Roman', serif;
-            height: 100%;
+            height: 100%; width: 100%;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- THE HEARTH (Layer 1 - RECALIBRATED) --- */
+        /* --- THE HEARTH (LAYER 1 - SILENCED) --- */
         #vault-stage {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: url('vault_8k.webp') no-repeat center center;
             background-size: cover;
-            display: flex; flex-direction: column; 
-            justify-content: center; align-items: center;
             z-index: 1;
-            transform: scale(1.15); /* PAX START */
+            transform: scale(1.1);
             animation: imageBreathe var(--tempo) infinite alternate ease-in-out;
-            transition: filter 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
+            pointer-events: none; /* PHYSICS BYPASS: Clicks go through this */
         }
+        @keyframes imageBreathe { 0% { transform: scale(1.1) translateZ(0); } 100% { transform: scale(1.18) translateZ(0); } }
 
-        @keyframes imageBreathe { 
-            0% { transform: scale(1.15); } 
-            100% { transform: scale(1.2); } 
-        }
-
-        /* --- SOMATIC HIJACK (Layer 2 - THE PAX GLOW) --- */
+        /* --- THE PAX GLOW (LAYER 2 - SILENCED) --- */
         #glow-layer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--pax-amber);
-            z-index: 500;
-            pointer-events: none;
-            opacity: 0.15; /* PAX EXHALE */
+            z-index: 2;
+            pointer-events: none; /* PHYSICS BYPASS */
+            opacity: 0.2;
             animation: somaticBreathe var(--tempo) infinite alternate ease-in-out;
             will-change: opacity;
-            
-            /* S9 LUXURY FILTER */
-            backdrop-filter: sepia(10%) brightness(0.95); 
-            -webkit-backdrop-filter: sepia(10%) brightness(0.95);
+            backdrop-filter: sepia(10%) brightness(0.9);
+            -webkit-backdrop-filter: sepia(10%) brightness(0.9);
+        }
+        @keyframes somaticBreathe { 0% { opacity: 0.15; } 100% { opacity: 0.6; } }
+
+        /* --- UI LAYER (LAYER 10 - KINETIC) --- */
+        #ui-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        @keyframes somaticBreathe { 
-            0% { opacity: 0.15; }  
-            100% { opacity: 0.8; } 
+        /* --- THE GALLERY ARRAY --- */
+        .gallery-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center;
+            align-items: center;
+            gap: clamp(10px, 2vw, 25px); 
+            width: 100%;
+            max-width: 1300px;
+            perspective: 1000px;
+            margin-bottom: 20px;
         }
 
-        /* --- THE COMMAND INTERFACE (GLASS & GOLD) --- */
+        .polaroid {
+            background: #E8DCC4; 
+            padding: 10px 10px 40px 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            transform: rotate(-1deg); 
+            transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .polaroid:hover { 
+            transform: rotate(0deg) scale(1.1) translateZ(50px); 
+            z-index: 50; 
+        }
+        .polaroid img { 
+            width: clamp(120px, 15vw, 180px); 
+            height: clamp(120px, 15vw, 180px); 
+            object-fit: cover; 
+            display: block;
+        }
+
+        /* --- THE GLASS COMMAND BAR --- */
         .glass-bar {
-            position: absolute; bottom: 50px;
             background: var(--glass);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            padding: 15px 35px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 12px 25px;
             border-radius: 50px;
-            display: flex; gap: 20px;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
-            z-index: 1000;
+            display: flex; 
+            gap: 12px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .jolt-btn {
-            background: none; border: 1px solid var(--gold-leaf);
-            color: var(--gold-leaf); padding: 10px 22px;
-            cursor: pointer; letter-spacing: 3px;
-            transition: 0.4s; border-radius: 4px;
-            font-size: 0.75rem; text-transform: uppercase;
+            background: rgba(0,0,0,0.5); 
+            border: 1px solid var(--gold-leaf);
+            color: var(--gold-leaf); 
+            padding: 8px 18px;
+            cursor: pointer; 
+            letter-spacing: 2px;
+            transition: 0.2s; 
+            border-radius: 4px;
+            font-size: 0.65rem; 
+            text-transform: uppercase;
+            touch-action: manipulation; /* PURGE S9 DELAY */
         }
-
         .jolt-btn:hover { background: var(--gold-leaf); color: #000; }
 
-        /* --- THE POLAROIDS (THE TRENCHES) --- */
-        .gallery-container { display: flex; gap: 20px; z-index: 10; perspective: 1200px; }
-        .polaroid {
-            background: #E8DCC4; padding: 10px 10px 45px 10px;
-            box-shadow: 0 35px 70px rgba(0,0,0,0.9);
-            transform: rotate(-2deg); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        /* --- MOBILE STACK (S9 STRIKE) --- */
+        @media (max-width: 900px) {
+            #ui-layer { justify-content: flex-start; padding-top: 30px; overflow-y: auto; }
+            .gallery-container { padding-bottom: 100px; }
+            .polaroid { width: 130px; padding-bottom: 25px; }
+            .polaroid img { width: 110px; height: 110px; }
+            .glass-bar { width: 95%; border-radius: 15px; bottom: 20px; position: fixed; }
+            .jolt-btn { flex: 1 1 40%; font-size: 0.55rem; text-align: center; }
         }
-        .polaroid:hover { transform: rotate(0deg) scale(1.15) translateZ(100px); z-index: 600; }
-        .polaroid img { width: 180px; height: 180px; object-fit: cover; }
 
-        /* --- AESTHETIC ARRAY JOLTS (Visibility Refined) --- */
-        .noir { filter: contrast(1.2) brightness(1.0) sepia(0.1); }
-        .lunar { filter: contrast(0.95) brightness(1.15) hue-rotate(180deg) saturate(0.4); }
-        .vellum { filter: sepia(0.5) brightness(1.05) contrast(1.1); }
-        .amethyst { filter: hue-rotate(270deg) brightness(0.95) saturate(1.2); }
+        /* --- AESTHETIC JOLT FILTERS --- */
+        .noir { filter: contrast(1.1) sepia(0.1); }
+        .lunar { filter: contrast(0.9) hue-rotate(180deg) saturate(0.5); }
+        .vellum { filter: sepia(0.6) contrast(1.1); }
+        .amethyst { filter: hue-rotate(270deg) saturate(1.1); }
     </style>
 </head>
-<body>
+<body id="master-body">
 
+    <div id="vault-stage" class="noir"></div>
     <div id="glow-layer"></div>
 
-    <div id="vault-stage" class="noir">
+    <div id="ui-layer">
         <div class="gallery-container">
             <div class="polaroid"><img src="atrium_8k.webp"></div>
             <div class="polaroid"><img src="command_8k.webp"></div>
@@ -115,22 +160,37 @@
         </div>
 
         <div class="glass-bar">
-            <button class="jolt-btn" onclick="systemJolt('noir')">[A] NOIR</button>
-            <button class="jolt-btn" onclick="systemJolt('lunar')">[B] LUNAR</button>
-            <button class="jolt-btn" onclick="systemJolt('vellum')">[C] VELLUM</button>
-            <button class="jolt-btn" onclick="systemJolt('amethyst')">[D] AMETHYST</button>
-            <button class="jolt-btn" onclick="toggleEngine()" id="engine-btn">ENGINE: OFF</button>
+            <button class="jolt-btn" onclick="systemJolt('noir')">Noir</button>
+            <button class="jolt-btn" onclick="systemJolt('lunar')">Lunar</button>
+            <button class="jolt-btn" onclick="systemJolt('vellum')">Vellum</button>
+            <button class="jolt-btn" onclick="systemJolt('amethyst')">Amethyst</button>
+            <button class="jolt-btn" onclick="toggleEngine()" id="engine-btn" style="border-color:#fff; color:#fff;">Engine</button>
         </div>
     </div>
 
-    <audio id="teacup-audio" src="teacup.mp3" loop></audio>
+    <audio id="teacup-audio" src="teacup.mp3" loop preload="auto"></audio>
 
     <script>
         let engineActive = false;
         let hapticPulse;
+        let audioPrimed = false;
         const audio = document.getElementById('teacup-audio');
 
+        // --- THE KINETIC PRIMER (HANDSHAKE) ---
+        // Wakes up the audio engine on the first touch anywhere
+        function primeEngine() {
+            if (!audioPrimed) {
+                audio.play().then(() => {
+                    audio.pause(); // Start and immediately pause to satisfy browser security
+                    audioPrimed = true;
+                    console.log("📂 Teacup Primed: Handshake Success.");
+                }).catch(e => console.log("Awaiting Strike..."));
+            }
+        }
+        document.body.addEventListener('click', primeEngine, { once: true });
+
         function systemJolt(profile) {
+            // TARGET THE BACKGROUND STAGE
             document.getElementById('vault-stage').className = profile;
             if (navigator.vibrate) navigator.vibrate([30, 40]);
         }
@@ -139,12 +199,13 @@
             const btn = document.getElementById('engine-btn');
             if (!engineActive) {
                 engineActive = true;
-                btn.innerText = "ENGINE: ON";
-                audio.play().catch(n => console.log("Handshake Required"));
+                btn.innerText = "Engine: ON";
+                audio.volume = 0.4;
+                audio.play().catch(n => console.warn("Handshake Required"));
                 startPaxSync();
             } else {
                 engineActive = false;
-                btn.innerText = "ENGINE: OFF";
+                btn.innerText = "Engine: OFF";
                 audio.pause();
                 clearInterval(hapticPulse);
             }
@@ -153,7 +214,6 @@
         function startPaxSync() {
             const pulse = () => {
                 if (navigator.vibrate && engineActive) {
-                    // THE HEARTBEAT: Aligned with the PAX Inhale
                     navigator.vibrate([40, 60, 40]);
                 }
             };
