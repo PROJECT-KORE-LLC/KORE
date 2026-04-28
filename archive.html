@@ -6,7 +6,6 @@
     <title>PROJECT KORE // THE ARCHIVE // TEST SHELL 1 //</title>
     <style>
         :root {
-            /* UNIVERSAL PALETTE MANIFEST (GROUND TRUTH: NOIR) */
             --primary: #D4AF37; 
             --primary-glow: rgba(212, 175, 55, 0.35);
             --hijack-glow: rgba(229, 149, 0, 0.6);
@@ -15,7 +14,6 @@
             --unison-ease: cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
 
-        /* --- THE SOVEREIGN JOLT ARRAY --- */
         .noir-mode { --primary: #D4AF37; --hijack-glow: rgba(229, 149, 0, 0.6); --glass: rgba(6, 6, 8, 0.98); }
         .lunar-mode { --primary: #A5F2F3; --hijack-glow: rgba(0, 80, 150, 0.5); --glass: rgba(4, 8, 12, 0.98); }
         .vellum-mode { --primary: #C2B280; --hijack-glow: rgba(101, 67, 33, 0.5); --glass: rgba(12, 10, 8, 0.98); }
@@ -26,9 +24,9 @@
             overflow: hidden; font-family: 'Times New Roman', serif;
             height: 100%; width: 100%; color: #F4EBD0;
             -webkit-font-smoothing: antialiased;
+            touch-action: none; /* Prevents accidental browser-zoom glitches */
         }
 
-        /* --- LAYER 1: THE HEARTH (8K GALLERY BREATH) --- */
         #bg-anchor {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #020204 url('gallery_8k.webp') no-repeat center center;
@@ -38,7 +36,6 @@
         }
         @keyframes flatlineBreath { 0% { transform: scale(1) translateZ(0); } 100% { transform: scale(1.08) translateZ(0); } }
 
-        /* --- LAYER 2: SOMATIC HIJACK (INTENSIFIED VIGNETTE) --- */
         #glow-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, transparent 10%, var(--hijack-glow) 80%, var(--hijack-glow) 100%);
@@ -49,70 +46,84 @@
         }
         @keyframes flatlineGlow { 0% { opacity: 0.15; } 100% { opacity: 0.75; } }
 
-        /* --- UI VIEWPORT --- */
         #ui-viewport {
             position: relative; z-index: 100;
             height: 100vh; width: 100%;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            padding: 20px; box-sizing: border-box;
+            padding: 15px; box-sizing: border-box;
             transition: opacity 1.5s var(--unison-ease);
         }
         .cloaked { opacity: 0 !important; pointer-events: none !important; }
 
         /* --- THE ARCHIVE VAULT (Massive Mass) --- */
         .archive-vault {
-            width: 95%; max-width: 950px; height: 80vh;
+            width: 100%; max-width: 950px; 
+            max-height: 75vh;
             background: var(--glass);
             border: 2px solid var(--primary);
-            padding: 45px; box-sizing: border-box;
-            display: flex; flex-direction: column; gap: 30px;
+            padding: 40px; box-sizing: border-box;
+            display: flex; flex-direction: column; gap: 20px;
             box-shadow: 0 0 100px #000, inset 0 0 40px var(--primary-glow);
             transition: all 1s var(--unison-ease);
+            backdrop-filter: blur(10px);
         }
 
-        .vault-header { border-bottom: 2px solid var(--primary); padding-bottom: 20px; }
+        .vault-header { border-bottom: 2px solid var(--primary); padding-bottom: 15px; }
         .vault-header h2 { 
-            margin: 0; font-size: 1.5rem; letter-spacing: 16px; 
+            margin: 0; font-size: clamp(1rem, 5vw, 1.5rem); 
+            letter-spacing: clamp(4px, 2vw, 16px); 
             text-transform: uppercase; font-weight: normal; color: var(--primary);
             text-shadow: 0 0 15px var(--primary-glow);
         }
 
         .annals-body {
             flex: 1; overflow-y: auto;
-            font-family: 'Georgia', serif; line-height: 2.2;
-            padding-right: 25px; font-size: 1.1rem;
+            font-family: 'Georgia', serif; line-height: 1.8;
+            padding-right: 15px; font-size: 1rem;
             color: rgba(244, 235, 208, 0.85);
             scrollbar-width: none;
         }
         .annals-body::-webkit-scrollbar { display: none; }
 
         .lore-input {
-            background: rgba(0,0,0,0.3); border: none;
+            background: rgba(0,0,0,0.4); border: none;
             border-left: 2px solid var(--primary);
-            color: var(--primary); padding: 20px;
+            color: var(--primary); padding: 15px;
             outline: none; resize: none; font-family: monospace;
-            font-size: 0.95rem; transition: border 0.5s;
+            font-size: 0.9rem; transition: border 0.5s;
         }
 
-        /* --- COMMAND ARRAY --- */
+        /* --- COMMAND ARRAY (RESPONSIVE STRIKE) --- */
         .command-array {
-            margin-top: 40px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+            margin-top: 25px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+            width: 100%; max-width: 950px;
         }
         .lux-btn {
             background: rgba(0,0,0,0.6); border: 1px solid var(--primary);
-            color: var(--primary); padding: 12px 28px; cursor: pointer;
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 5px;
-            transition: 0.4s;
+            color: var(--primary); padding: 12px 20px; cursor: pointer;
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px;
+            transition: 0.4s; touch-action: manipulation;
+            flex-grow: 1; max-width: 150px; text-align: center;
         }
-        .lux-btn:hover { background: var(--primary-glow); }
+        .lux-btn:hover { background: var(--primary-glow); box-shadow: 0 0 15px var(--primary-glow); }
 
         #cloak-btn {
-            position: fixed; top: 35px; right: 35px; z-index: 2000;
-            background: none; border: 1px solid var(--primary);
-            color: var(--primary); padding: 10px 22px; cursor: pointer; 
-            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 5px;
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            background: rgba(0,0,0,0.5); border: 1px solid var(--primary);
+            color: var(--primary); padding: 8px 15px; cursor: pointer; 
+            font-size: 0.55rem; text-transform: uppercase; letter-spacing: 3px;
             backdrop-filter: blur(5px); transition: all 1s;
+            touch-action: manipulation;
+        }
+
+        /* --- MOBILE SURGERY (The S9 Strike) --- */
+        @media (max-width: 600px) {
+            .archive-vault { padding: 20px; gap: 15px; }
+            .command-array { gap: 8px; }
+            .lux-btn { padding: 10px 5px; letter-spacing: 1px; font-size: 0.6rem; }
+            #cloak-btn { top: 10px; right: 10px; padding: 5px 10px; }
+            .vault-header h2 { letter-spacing: 4px; }
         }
     </style>
 </head>
@@ -142,7 +153,7 @@
             <button class="lux-btn" onclick="jolt('lunar')">Lunar</button>
             <button class="lux-btn" onclick="jolt('vellum')">Vellum</button>
             <button class="lux-btn" onclick="jolt('amethyst')">Amethyst</button>
-            <button class="lux-btn" onclick="commitLore()" style="border-color: #fff; color: #fff;">Commit Lore</button>
+            <button class="lux-btn" onclick="commitLore()" style="border-color: #fff; color: #fff; max-width: 100%; flex-basis: 100%;">Commit Lore</button>
         </div>
     </div>
 
@@ -152,7 +163,6 @@
         let atmosphereArmed = false;
         const wind = document.getElementById('wind-atmosphere');
 
-        // --- THE SOVEREIGN HANDSHAKE (Universal Trigger) ---
         function armAtmosphere() {
             if (!atmosphereArmed) {
                 wind.volume = 0.3;
@@ -165,11 +175,10 @@
             }
         }
 
-        // Catch the FIRST touch anywhere on the rig
         document.body.addEventListener('click', armAtmosphere, { once: true });
 
         function jolt(palette) {
-            armAtmosphere(); // Redundant check
+            armAtmosphere();
             const body = document.getElementById('master-body');
             body.classList.remove('noir-mode', 'lunar-mode', 'vellum-mode', 'amethyst-mode');
             if (palette !== 'default') body.classList.add(`${palette}-mode`);
@@ -177,12 +186,13 @@
         }
 
         function commitLore() {
-            armAtmosphere(); // Redundant check
+            armAtmosphere();
             const input = document.getElementById('lore-editor');
             const annals = document.getElementById('annals');
             if (input.value.trim() !== "") {
                 const p = document.createElement('p');
-                p.textContent = `> ${input.value}`;
+                p.style.margin = "10px 0";
+                p.innerHTML = `<span style="color:var(--primary); opacity:0.6;">></span> ${input.value}`;
                 annals.appendChild(p);
                 input.value = "";
                 annals.scrollTop = annals.scrollHeight;
