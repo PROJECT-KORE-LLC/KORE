@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROJECT KORE // COVENANT COMMAND // TEST SHELL 2</title>
+    <title>PROJECT KORE // COVENANT COMMAND // TEST SHELL 2 // LIQUID 9.0</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* --- THE BORDER-BOX GAVEL (TOTAL CONTAINMENT) --- */
+        *, *::before, *::after { box-sizing: border-box; }
+
         :root {
             --primary: #D4AF37; 
             --primary-glow: rgba(212, 175, 55, 0.4);
@@ -24,7 +27,8 @@
 
         body, html {
             margin: 0; padding: 0; background: #000;
-            overflow: hidden; font-family: 'Times New Roman', serif;
+            overflow-x: hidden; /* HARD STOP ON SIDE-SCROLLING */
+            font-family: 'Times New Roman', serif;
             height: 100%; width: 100%; color: #F4EBD0;
             -webkit-font-smoothing: antialiased;
         }
@@ -36,8 +40,9 @@
             background-size: cover; z-index: 1;
             animation: flatlineBreath var(--unison-tempo) infinite alternate var(--unison-ease);
             will-change: transform; transform: translateZ(0);
+            pointer-events: none;
         }
-        @keyframes flatlineBreath { 0% { transform: scale(1.1); } 100% { transform: scale(1.16); } }
+        @keyframes flatlineBreath { 0% { transform: scale(1.1) translateZ(0); } 100% { transform: scale(1.16) translateZ(0); } }
 
         #glow-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -46,104 +51,132 @@
             animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
             will-change: opacity; opacity: 0.15;
         }
-        @keyframes flatlineGlow { 0% { opacity: 0.15; } 100% { opacity: 0.75; } }
 
-        /* --- THE SOMATIC GATE --- */
+        /* --- THE SOMATIC GATE (AUDITOR VERBIAGE GROUND TRUTH) --- */
         #handshake-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 2000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            backdrop-filter: blur(40px); transition: opacity 1.2s var(--unison-ease), visibility 1.2s;
+            backdrop-filter: blur(40px); transition: opacity 1s;
         }
-        #handshake-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .handshake-input-wrap {
-            position: relative; border-bottom: 2px solid var(--primary);
-            padding: 10px; width: 280px; text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding: 10px; width: 85%; max-width: 280px; text-align: center;
         }
         .handshake-input-wrap input {
             background: transparent; border: none; color: var(--primary);
-            text-align: center; font-size: 2rem; letter-spacing: 15px;
+            text-align: center; font-size: 2rem; letter-spacing: 10px;
             outline: none; width: 100%; font-family: monospace;
             -webkit-text-security: disc;
         }
         .gate-label {
             font-size: 0.55rem; letter-spacing: 6px; color: var(--primary);
             opacity: 0.4; margin-bottom: 20px; text-transform: uppercase;
+            text-align: center;
         }
 
-        /* --- COMMAND VIEWPORT --- */
+        /* --- COMMAND VIEWPORT (FIT-TO-SCREEN PROTOCOL) --- */
         #ui-viewport {
             position: relative; z-index: 100;
-            height: 100vh; width: 100%;
-            display: flex; justify-content: center; align-items: center;
-            padding: 20px; box-sizing: border-box;
-            transition: opacity 1.5s var(--unison-ease), transform 1.5s var(--unison-ease);
-            opacity: 0; transform: scale(0.98);
+            height: 100vh; width: 100vw;
+            display: none; justify-content: center; align-items: center;
+            padding: 10px;
         }
-        #ui-viewport.active { opacity: 1; transform: scale(1); }
-        #ui-viewport.cloaked { opacity: 0 !important; pointer-events: none !important; }
+        #ui-viewport.active { display: flex; opacity: 1; }
 
         .command-tank {
-            width: 98%; max-width: 1300px; height: 92vh;
-            background: var(--glass); border: 2px solid var(--primary);
-            padding: 25px; box-sizing: border-box;
-            display: grid; grid-template-rows: auto 1fr auto; gap: 20px;
-            box-shadow: 0 0 100px #000, inset 0 0 40px var(--primary-glow);
-            backdrop-filter: blur(15px);
+            width: 100%; max-width: 1400px; height: 96vh;
+            background: var(--glass); border: 1px solid var(--primary);
+            padding: 15px; display: flex; flex-direction: column; gap: 10px;
+            box-shadow: 0 0 100px #000, inset 0 0 20px var(--primary-glow);
+            backdrop-filter: blur(15px); overflow: hidden;
+            contain: strict;
         }
 
-        .tank-header { border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .header-meta { display: flex; align-items: center; gap: 25px; }
-        
-        .cloak-trigger { 
-            background: none; border: 1px solid var(--primary); color: var(--primary); 
-            font-size: 0.55rem; letter-spacing: 4px; padding: 5px 15px; cursor: pointer;
-            text-transform: uppercase; transition: 0.3s;
+        /* --- HEADER ALIGNMENT --- */
+        .tank-header { border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .matrix-nav { display: flex; align-items: center; gap: 10px; }
+        .matrix-nav h2 { margin: 0; letter-spacing: 4px; text-transform: uppercase; font-size: 0.9rem; color: var(--primary); }
+        .nav-arrow { background: none; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 4px 10px; font-size: 0.7rem; }
+
+        /* --- THE CORE GRID (LAPTOP 3-COLUMN / S9 1-COLUMN) --- */
+        .core-grid { 
+            display: grid; 
+            grid-template-columns: minmax(0, 310px) 1fr minmax(0, 310px); 
+            gap: 15px; flex: 1; min-height: 0; width: 100%;
         }
-        .cloak-trigger:hover { background: var(--primary-glow); }
 
-        .matrix-nav { display: flex; gap: 15px; }
-        .nav-arrow { background: none; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 4px 12px; font-size: 0.7rem; }
-        
-        .core-grid { display: grid; grid-template-columns: 310px 1fr 310px; gap: 20px; min-height: 0; }
-        .sector { border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.01); min-height: 0; contain: content; }
-        .sector h3 { margin: 0 0 10px 0; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--primary); border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 5px; }
+        .array-column { display: flex; flex-direction: column; gap: 15px; min-height: 0; }
 
-        .feed-box { flex: 1; overflow-y: auto; scrollbar-width: none; }
-        .feed-box::-webkit-scrollbar { display: none; }
-        .entry { margin-bottom: 10px; font-size: 0.8rem; border-left: 2px solid rgba(212, 175, 55, 0.15); padding-left: 10px; line-height: 1.4; }
+        /* --- SECTOR ALIGNMENT (THE SQUISH DEFENSE) --- */
+        .sector { 
+            border: 1px solid rgba(212, 175, 55, 0.2); padding: 12px; 
+            display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.01); 
+            min-height: 0; flex: 1; overflow: hidden;
+        }
+        .sector h3 { 
+            margin: 0 0 8px 0; 
+            font-size: 0.6rem; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; color: var(--primary); 
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1); 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
 
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+        .feed-box { flex: 1; overflow-y: auto; scrollbar-width: none; min-height: 0; }
+        .entry { 
+            margin-bottom: 8px; font-size: 0.8rem; border-left: 2px solid var(--primary); 
+            padding-left: 10px; line-height: 1.4; color: rgba(244, 235, 208, 0.9);
+            word-wrap: break-word; /* PREVENTS TEXT FROM PUSHING BOX WIDTH */
+        }
+
+        /* --- THE CALENDAR GAVEL --- */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; flex: 1; width: 100%; }
         .cal-day {
-            background: rgba(255,255,255,0.01); border: 1px solid rgba(212, 175, 55, 0.08);
-            display: flex; flex-direction: column; padding: 6px; font-size: 0.6rem; color: rgba(212, 175, 55, 0.25);
-            cursor: pointer; position: relative;
+            background: rgba(255,255,255,0.01); border: 1px solid rgba(212, 175, 55, 0.05);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 0.6rem; color: rgba(212, 175, 55, 0.3); cursor: pointer; position: relative; min-height: 30px;
         }
-        .cal-day.active-node { border-color: var(--primary); background: rgba(212, 175, 55, 0.08); color: #fff; }
+        .cal-day.active-node { border-color: var(--primary); background: rgba(212, 175, 55, 0.1); color: #fff; }
         .cal-day.today { border-color: #fff; color: #fff; }
-        .cal-day.has-data::after { content: '•'; color: var(--primary); font-size: 1.2rem; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); }
 
-        .tank-footer { border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .dispatch-cluster { display: flex; gap: 15px; align-items: stretch; }
-        .target-selector { display: flex; flex-direction: column; gap: 5px; width: 140px; }
-        .target-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2); color: var(--primary); font-size: 0.5rem; padding: 6px; cursor: pointer; letter-spacing: 2px; }
+        /* --- FOOTER & DISPATCH --- */
+        .tank-footer { border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .dispatch-cluster { display: flex; gap: 10px; align-items: stretch; width: 100%; }
+        .target-selector { display: flex; flex-direction: column; gap: 4px; width: 100px; flex-shrink: 0; }
+        .target-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2); color: var(--primary); font-size: 0.45rem; padding: 4px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; }
         .target-btn.active { border-color: var(--primary); background: var(--primary-glow); }
-        .command-input { flex: 1; background: rgba(0,0,0,0.2); border: none; border-left: 2px solid var(--primary); color: var(--primary); padding: 12px; font-family: monospace; outline: none; resize: none; font-size: 0.9rem; }
-        .exec-btn { width: 100px; background: #000; border: 1px solid #fff; color: #fff; text-transform: uppercase; letter-spacing: 3px; font-size: 0.65rem; cursor: pointer; }
+        .command-input { flex: 1; background: rgba(0,0,0,0.2); border: none; border-left: 2px solid var(--primary); color: var(--primary); padding: 8px; font-family: monospace; outline: none; resize: none; font-size: 0.85rem; min-width: 0; }
+        .exec-btn { width: 70px; background: #000; border: 1px solid #fff; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-size: 0.6rem; cursor: pointer; flex-shrink: 0; }
 
-        .jolt-bar { display: flex; gap: 10px; justify-content: center; }
-        .lux-btn { background: rgba(0,0,0,0.6); border: 1px solid var(--primary); color: var(--primary); padding: 6px 18px; cursor: pointer; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 4px; }
+        /* --- THE LIQUID JOLT BAR --- */
+        .jolt-bar { display: flex; gap: 5px; justify-content: center; width: 100%; }
+        .lux-btn { background: rgba(0,0,0,0.6); border: 1px solid var(--primary); color: var(--primary); padding: 8px 12px; cursor: pointer; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 2px; white-space: nowrap; flex: 1; max-width: 100px; text-align: center; }
+
+        /* --- MOBILE SOVEREIGN COLLAPSE (S9 STRIKE) --- */
+        @media (max-width: 1000px) {
+            .core-grid { grid-template-columns: 1fr; overflow-y: auto; scrollbar-width: none; }
+            .array-column { width: 100%; }
+            .sector { min-height: 200px; }
+            .dispatch-cluster { flex-direction: row; flex-wrap: wrap; }
+            .target-selector { width: 100%; flex-direction: row; }
+            .target-btn { flex: 1; font-size: 0.5rem; }
+            .command-input { width: 100%; margin: 5px 0; }
+            .exec-btn { width: 100%; padding: 12px; }
+            .jolt-bar { flex-wrap: wrap; }
+            .lux-btn { flex-basis: 45%; max-width: none; }
+        }
     </style>
 </head>
-<body id="master-body" onclick="ghostRestore()">
+<body id="master-body">
 
     <audio id="cricket-atmosphere" src="crickets.mp3" loop></audio>
 
     <div id="handshake-overlay">
         <div class="gate-label">Initialize Sovereign Handshake</div>
         <div class="handshake-input-wrap">
-            <input type="text" id="passphrase-input" maxlength="6" autofocus spellcheck="false" autocomplete="off">
+            <input type="text" id="passphrase-input" maxlength="6" autofocus autocomplete="off" spellcheck="false">
         </div>
         <div style="margin-top:40px; font-size:0.5rem; opacity:0.3; letter-spacing:4px;">PROMPT: A1B2C3</div>
     </div>
@@ -156,98 +189,69 @@
             <header class="tank-header">
                 <div class="matrix-nav">
                     <button class="nav-arrow" onclick="changeMonth(-1)"><</button>
-                    <h2 id="matrix-month" style="margin:0; letter-spacing:6px; text-transform:uppercase; font-size:1.1rem; color:var(--primary);">Matrix</h2>
+                    <h2 id="matrix-month">Matrix</h2>
                     <button class="nav-arrow" onclick="changeMonth(1)">></button>
                 </div>
-                <div class="header-meta">
-                    <span id="active-date-display" style="font-size: 0.5rem; opacity: 0.5; letter-spacing: 4px;">[ NO NODE ]</span>
-                    <button class="cloak-trigger" onclick="toggleCloak(event)">Cloak System</button>
-                </div>
+                <button onclick="toggleCloak()" style="background:none; border:1px solid var(--primary); color:var(--primary); font-size:0.5rem; padding:4px 10px; cursor:pointer;">CLOAK</button>
             </header>
 
             <div class="core-grid">
-                <div style="display:flex; flex-direction:column; gap:20px;">
-                    <section class="sector" style="flex:1.5;"><h3>Directives</h3><div class="feed-box" id="directives-feed"></div></section>
-                    <section class="sector" style="flex:1;"><h3>Temporal Array</h3><div class="feed-box" id="temporal-feed"></div></section>
+                <div class="array-column">
+                    <section class="sector"><h3>Directives</h3><div class="feed-box" id="directives-feed"></div></section>
+                    <section class="sector"><h3>Temporal</h3><div class="feed-box" id="temporal-feed"></div></section>
                 </div>
-                <main class="sector"><h3>Temporal Matrix</h3><div class="calendar-grid" id="calendar-matrix"></div></main>
-                <div style="display:flex; flex-direction:column; gap:20px;">
-                    <section class="sector" style="flex:1;"><h3>Important</h3><div class="feed-box" id="important-feed"></div></section>
-                    <section class="sector" style="flex:1.5;"><h3>Notes</h3><div class="feed-box" id="notes-feed"></div></section>
+                <main class="sector"><h3>Matrix</h3><div class="calendar-grid" id="calendar-matrix"></div></main>
+                <div class="array-column">
+                    <section class="sector"><h3>Important</h3><div class="feed-box" id="important-feed"></div></section>
+                    <section class="sector"><h3>Notes</h3><div class="feed-box" id="notes-feed"></div></section>
                 </div>
             </div>
 
             <footer class="tank-footer">
                 <div class="dispatch-cluster">
                     <div class="target-selector">
-                        <button class="target-btn active" onclick="setTarget('TASK', this)">DIRECTIVE</button>
-                        <button class="target-btn" onclick="setTarget('APPT', this)">TEMPORAL</button>
-                        <button class="target-btn" onclick="setTarget('IMPORTANT', this)">IMPORTANT</button>
-                        <button class="target-btn" onclick="setTarget('NOTE', this)">NOTES</button>
+                        <button class="target-btn active" id="btn-task" onclick="setTarget('TASK', this)">DIR</button>
+                        <button class="target-btn" id="btn-appt" onclick="setTarget('APPT', this)">TEMP</button>
+                        <button class="target-btn" id="btn-imp" onclick="setTarget('IMPORTANT', this)">IMP</button>
+                        <button class="target-btn" id="btn-note" onclick="setTarget('NOTE', this)">NOTE</button>
                     </div>
                     <textarea class="command-input" id="command-editor" placeholder="DISPATCH..."></textarea>
-                    <button class="exec-btn" onclick="executeCommand()">Execute</button>
+                    <button class="exec-btn" onclick="executeCommand()">EXEC</button>
                 </div>
                 <div class="jolt-bar">
                     <button class="lux-btn" onclick="jolt('noir')">Noir</button>
                     <button class="lux-btn" onclick="jolt('lunar')">Lunar</button>
                     <button class="lux-btn" onclick="jolt('vellum')">Vellum</button>
                     <button class="lux-btn" onclick="jolt('amethyst')">Amethyst</button>
-                    <button class="lux-btn" style="opacity:0.4" onclick="exportVeil()">Backup</button>
                 </div>
             </footer>
         </div>
     </div>
 
     <script>
-        // ##################################################################
         const SUPABASE_URL = 'https://oqwljgnlhaghnrtkvvkz.supabase.co'; 
         const SUPABASE_KEY = 'oqwljgnlhaghnrtkvvkz';
-        // ##################################################################
-
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const TEST_KEY = "A1B2C3";
         let currentTarget = "TASK", activeDate = null, matrixState = {}, viewDate = new Date();
-        let atmosphereArmed = false;
 
-        // --- HANDSHAKE ---
         const gateInput = document.getElementById('passphrase-input');
-        gateInput.addEventListener('input', (e) => {
-            if (e.target.value.toUpperCase() === TEST_KEY) {
-                document.getElementById('handshake-overlay').classList.add('hidden');
+        function tryUnlock(value) {
+            if (value.trim().toUpperCase() === TEST_KEY) {
+                document.getElementById('handshake-overlay').style.display = 'none';
+                document.getElementById('ui-viewport').style.display = 'flex';
                 document.getElementById('ui-viewport').classList.add('active');
-                armAtmosphere(); // Satisfies browser interaction policy
                 inhaleVeil();
-            }
-        });
-
-        // --- ATMOSPHERE ENGINE ---
-        function armAtmosphere() {
-            const crickets = document.getElementById('cricket-atmosphere');
-            if (!atmosphereArmed) {
-                crickets.volume = 0.3; // Absolute Zero HWUI Profile: low draw, high presence
-                crickets.play().then(() => {
-                    atmosphereArmed = true;
-                }).catch(e => {
-                    console.warn("Sovereign Atmosphere stalled: interaction required.");
-                });
+                try { document.getElementById('cricket-atmosphere').play(); } catch(e){}
             }
         }
+        gateInput.addEventListener('input', (e) => tryUnlock(e.target.value));
+        gateInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(gateInput.value); });
 
-        // --- CLOAK ---
-        function toggleCloak(e) {
-            e.stopPropagation();
-            document.getElementById('ui-viewport').classList.add('cloaked');
-        }
+        function toggleCloak() { document.getElementById('ui-viewport').classList.toggle('cloaked'); }
+        function jolt(p) { const b = document.getElementById('master-body'); b.className = ''; b.classList.add(`${p}-mode`); }
+        function setTarget(t, btn) { currentTarget = t; document.querySelectorAll('.target-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); }
 
-        function ghostRestore() {
-            const viewport = document.getElementById('ui-viewport');
-            if (viewport.classList.contains('cloaked')) {
-                viewport.classList.remove('cloaked');
-            }
-        }
-
-        // --- DATA ---
         async function inhaleVeil() {
             const raw = localStorage.getItem('KORE_V1');
             if (raw) { try { matrixState = JSON.parse(atob(raw)); } catch(e) { matrixState = {}; } }
@@ -266,19 +270,15 @@
         function initMatrix() {
             const grid = document.getElementById('calendar-matrix');
             const y = viewDate.getFullYear(), m = viewDate.getMonth();
-            document.getElementById('matrix-month').innerText = `${viewDate.toLocaleString('default', {month:'long'})} ${y}`;
+            document.getElementById('matrix-month').innerText = `${viewDate.toLocaleString('default', {month:'short'})} ${y}`;
             grid.innerHTML = '';
-            const first = new Date(y, m, 1).getDay();
             const total = new Date(y, m+1, 0).getDate();
-            for(let i=0; i<first; i++) { const v = document.createElement('div'); v.className='cal-day'; v.style.opacity='0.05'; grid.appendChild(v); }
             for(let i=1; i<=total; i++) {
                 const dStr = `${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const d = document.createElement('div'); d.className = 'cal-day';
-                if(i === new Date().getDate() && m === new Date().getMonth()) d.classList.add('today');
                 if(dStr === activeDate) d.classList.add('active-node');
-                if(matrixState[dStr] && (matrixState[dStr].TASK.length || matrixState[dStr].APPT.length || matrixState[dStr].IMPORTANT.length || matrixState[dStr].NOTE.length)) d.classList.add('has-data');
                 d.innerHTML = `<span>${i}</span>`;
-                d.onclick = () => { activeDate = dStr; document.getElementById('active-date-display').innerText = `[ NODE: ${dStr} ]`; refresh(); initMatrix(); };
+                d.onclick = () => { activeDate = dStr; refresh(); initMatrix(); };
                 grid.appendChild(d);
             }
         }
@@ -287,8 +287,11 @@
             const d = matrixState[activeDate] || { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
             const f = { TASK:'directives-feed', APPT:'temporal-feed', IMPORTANT:'important-feed', NOTE:'notes-feed' };
             Object.keys(f).forEach(k => {
-                const el = document.getElementById(f[k]); el.innerHTML = '';
-                if(d[k]) d[k].forEach(t => { const div = document.createElement('div'); div.className='entry'; div.innerHTML=t; el.appendChild(div); });
+                const el = document.getElementById(f[k]); 
+                if(el) {
+                    el.innerHTML = '';
+                    if(d[k]) d[k].forEach(t => { const div = document.createElement('div'); div.className='entry'; div.innerHTML=t; el.appendChild(div); });
+                }
             });
         }
 
@@ -304,9 +307,6 @@
         }
 
         function changeMonth(n) { viewDate.setMonth(viewDate.getMonth() + n); initMatrix(); }
-        function setTarget(t, btn) { currentTarget = t; document.querySelectorAll('.target-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); }
-        function jolt(p) { const b = document.getElementById('master-body'); b.className = ''; b.classList.add(`${p}-mode`); }
-        function exportVeil() { const blob = new Blob([btoa(JSON.stringify(matrixState))], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='KORE_LORE.json'; a.click(); }
     </script>
 </body>
 </html>
