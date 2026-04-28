@@ -20,6 +20,7 @@
         .noir-mode { --primary: #D4AF37; --hijack-glow: rgba(229, 149, 0, 0.6); }
         .lunar-mode { --primary: #A5F2F3; --hijack-glow: rgba(0, 80, 150, 0.5); }
         .vellum-mode { --primary: #C2B280; --hijack-glow: rgba(101, 67, 33, 0.5); }
+        .amethyst-mode { --primary: #9966CC; --hijack-glow: rgba(75, 0, 130, 0.5); }
 
         body, html {
             margin: 0; padding: 0; background: #000;
@@ -137,6 +138,8 @@
 </head>
 <body id="master-body" onclick="ghostRestore()">
 
+    <audio id="cricket-atmosphere" src="crickets.mp3" loop></audio>
+
     <div id="handshake-overlay">
         <div class="gate-label">Initialize Sovereign Handshake</div>
         <div class="handshake-input-wrap">
@@ -189,6 +192,7 @@
                     <button class="lux-btn" onclick="jolt('noir')">Noir</button>
                     <button class="lux-btn" onclick="jolt('lunar')">Lunar</button>
                     <button class="lux-btn" onclick="jolt('vellum')">Vellum</button>
+                    <button class="lux-btn" onclick="jolt('amethyst')">Amethyst</button>
                     <button class="lux-btn" style="opacity:0.4" onclick="exportVeil()">Backup</button>
                 </div>
             </footer>
@@ -197,16 +201,14 @@
 
     <script>
         // ##################################################################
-        // !!! SOVEREIGN LINK CONFIGURATION !!!
-        // ##################################################################
         const SUPABASE_URL = 'https://oqwljgnlhaghnrtkvvkz.supabase.co'; 
         const SUPABASE_KEY = 'oqwljgnlhaghnrtkvvkz';
         // ##################################################################
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
         const TEST_KEY = "A1B2C3";
         let currentTarget = "TASK", activeDate = null, matrixState = {}, viewDate = new Date();
+        let atmosphereArmed = false;
 
         // --- HANDSHAKE ---
         const gateInput = document.getElementById('passphrase-input');
@@ -214,11 +216,25 @@
             if (e.target.value.toUpperCase() === TEST_KEY) {
                 document.getElementById('handshake-overlay').classList.add('hidden');
                 document.getElementById('ui-viewport').classList.add('active');
+                armAtmosphere(); // Satisfies browser interaction policy
                 inhaleVeil();
             }
         });
 
-        // --- CLOAK PROTOCOL ---
+        // --- ATMOSPHERE ENGINE ---
+        function armAtmosphere() {
+            const crickets = document.getElementById('cricket-atmosphere');
+            if (!atmosphereArmed) {
+                crickets.volume = 0.3; // Absolute Zero HWUI Profile: low draw, high presence
+                crickets.play().then(() => {
+                    atmosphereArmed = true;
+                }).catch(e => {
+                    console.warn("Sovereign Atmosphere stalled: interaction required.");
+                });
+            }
+        }
+
+        // --- CLOAK ---
         function toggleCloak(e) {
             e.stopPropagation();
             document.getElementById('ui-viewport').classList.add('cloaked');
@@ -231,29 +247,22 @@
             }
         }
 
-        // --- THE INHALE (Load Data) ---
+        // --- DATA ---
         async function inhaleVeil() {
             const raw = localStorage.getItem('KORE_V1');
             if (raw) { try { matrixState = JSON.parse(atob(raw)); } catch(e) { matrixState = {}; } }
             initMatrix();
-
-            const { data, error } = await supabaseClient
-                .from('matrix_ledger')
-                .select('*');
-
+            const { data, error } = await supabaseClient.from('matrix_ledger').select('*');
             if (!error && data) {
                 data.forEach(row => {
-                    const date = row.node_date;
-                    if (!matrixState[date]) matrixState[date] = { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
-                    if (!matrixState[date][row.category].includes(row.content)) {
-                        matrixState[date][row.category].push(row.content);
-                    }
+                    const d = row.node_date;
+                    if (!matrixState[d]) matrixState[d] = { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
+                    if (!matrixState[d][row.category].includes(row.content)) matrixState[d][row.category].push(row.content);
                 });
                 initMatrix();
             }
         }
 
-        // --- MATRIX ENGINE ---
         function initMatrix() {
             const grid = document.getElementById('calendar-matrix');
             const y = viewDate.getFullYear(), m = viewDate.getMonth();
@@ -267,9 +276,7 @@
                 const d = document.createElement('div'); d.className = 'cal-day';
                 if(i === new Date().getDate() && m === new Date().getMonth()) d.classList.add('today');
                 if(dStr === activeDate) d.classList.add('active-node');
-                if(matrixState[dStr] && (matrixState[dStr].TASK.length || matrixState[dStr].APPT.length || matrixState[dStr].IMPORTANT.length || matrixState[dStr].NOTE.length)) {
-                    d.classList.add('has-data');
-                }
+                if(matrixState[dStr] && (matrixState[dStr].TASK.length || matrixState[dStr].APPT.length || matrixState[dStr].IMPORTANT.length || matrixState[dStr].NOTE.length)) d.classList.add('has-data');
                 d.innerHTML = `<span>${i}</span>`;
                 d.onclick = () => { activeDate = dStr; document.getElementById('active-date-display').innerText = `[ NODE: ${dStr} ]`; refresh(); initMatrix(); };
                 grid.appendChild(d);
@@ -289,17 +296,11 @@
             const input = document.getElementById('command-editor');
             const val = input.value.trim();
             if(!activeDate || !val) return;
-
             if(!matrixState[activeDate]) matrixState[activeDate] = { TASK:[], APPT:[], IMPORTANT:[], NOTE:[] };
             matrixState[activeDate][currentTarget].push(val);
             localStorage.setItem('KORE_V1', btoa(JSON.stringify(matrixState)));
             input.value = ''; refresh(); initMatrix();
-
-            const { error } = await supabaseClient
-                .from('matrix_ledger')
-                .insert([{ node_date: activeDate, category: currentTarget, content: val }]);
-
-            if (error) console.error("Cloud Sync Error:", error.message);
+            await supabaseClient.from('matrix_ledger').insert([{ node_date: activeDate, category: currentTarget, content: val }]);
         }
 
         function changeMonth(n) { viewDate.setMonth(viewDate.getMonth() + n); initMatrix(); }
