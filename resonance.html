@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROJECT KORE // THE RESONANCE</title>
+    <title>PROJECT KORE // THE RESONANCE // LIQUID 13.0</title>
     <style>
+        /* --- THE GEOMETRY GAVEL --- */
+        *, *::before, *::after { box-sizing: border-box; }
+
         :root {
-            /* UNIVERSAL PALETTE MANIFEST */
             --primary: #D4AF37; 
             --primary-glow: rgba(212, 175, 55, 0.35);
             --hijack-glow: rgba(229, 149, 0, 0.6);
@@ -27,35 +29,26 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- LAYER 1: THE HEARTH (COMPOSITOR ONLY) --- */
+        /* --- THE HEARTH & SOMATIC GLOW --- */
         #bg-anchor {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #020204 url('resonance_8k.webp') no-repeat center center;
             background-size: cover; z-index: 1;
-            /* TRANSFORM-ONLY: This triggers the hardware backing store */
             animation: flatlineBreath var(--unison-tempo) infinite alternate var(--unison-ease);
-            will-change: transform;
-            transform: translateZ(0);
+            will-change: transform; transform: translateZ(0);
         }
         @keyframes flatlineBreath { 0% { transform: scale(1) translateZ(0); } 100% { transform: scale(1.08) translateZ(0); } }
 
-       /* --- LAYER 2: SOMATIC HIJACK (INTENSIFIED VIGNETTE) --- */
-#glow-layer {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    /* Gradient starts earlier (10%) and hits harder (Pax Amber at 80%) */
-    background: radial-gradient(circle at center, transparent 10%, var(--hijack-glow) 80%, var(--hijack-glow) 100%);
-    z-index: 5; pointer-events: none;
-    animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
-    will-change: opacity;
-    /* Increased Base and Peak Opacity */
-    opacity: 0.15;
-    transition: background 1.5s var(--unison-ease);
-}
+        #glow-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 10%, var(--hijack-glow) 80%, var(--hijack-glow) 100%);
+            z-index: 5; pointer-events: none;
+            animation: flatlineGlow var(--unison-tempo) infinite alternate var(--unison-ease);
+            will-change: opacity; opacity: 0.15;
+            transition: background 1.5s var(--unison-ease);
+        }
+        @keyframes flatlineGlow { 0% { opacity: 0.15; } 100% { opacity: 0.75; } }
 
-@keyframes flatlineGlow { 
-    0% { opacity: 0.15; } 
-    100% { opacity: 0.75; } /* UNDENIABLE PEAK */
-}
         /* --- UI VIEWPORT --- */
         #ui-viewport {
             position: relative; z-index: 100;
@@ -63,84 +56,97 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             padding: 20px; box-sizing: border-box;
-            transition: opacity 1.5s var(--unison-ease);
+            transition: opacity 1s var(--unison-ease);
         }
-        .cloaked { opacity: 0 !important; pointer-events: none !important; }
+        #ui-viewport.cloaked { opacity: 0 !important; pointer-events: none !important; }
 
         /* --- THE MIXER VAULT --- */
         .mixer-vault {
-            width: 95%; max-width: 950px; height: 80vh;
+            width: 100%; max-width: 950px; height: 85vh;
             background: var(--glass);
             border: 2px solid var(--primary);
-            padding: 45px; box-sizing: border-box;
+            padding: 30px; box-sizing: border-box;
             display: flex; flex-direction: column;
             box-shadow: 0 0 100px #000, inset 0 0 40px var(--primary-glow);
             transition: all 1s var(--unison-ease);
+            overflow: hidden;
         }
 
         .mixer-header {
             border-bottom: 2px solid var(--primary);
-            padding-bottom: 20px; margin-bottom: 30px;
+            padding-bottom: 15px; margin-bottom: 20px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .mixer-header h2 { 
-            margin: 0; font-size: 1.4rem; letter-spacing: 16px; 
-            text-transform: uppercase; font-weight: normal; color: var(--primary);
+            margin: 0; 
+            font-size: clamp(1rem, 2vw, 1.4rem); 
+            letter-spacing: clamp(4px, 1.5vw, 16px); 
+            text-transform: uppercase; color: var(--primary);
             text-shadow: 0 0 15px var(--primary-glow);
-            transition: color 1s;
         }
 
         .mixer-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
-            overflow-y: auto; flex: 1; padding-right: 15px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 10px; flex: 1; overflow-y: auto; 
+            padding-right: 10px; scrollbar-width: none;
         }
         .mixer-grid::-webkit-scrollbar { display: none; }
 
         .sound-card {
             background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 22px; text-align: center; transition: 0.4s;
+            padding: 15px; text-align: center; transition: 0.3s;
         }
         .sound-card.active { background: var(--primary-glow); border-color: var(--primary); }
 
         .sound-btn {
             background: none; border: none; color: var(--primary);
-            font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
-            cursor: pointer; margin-bottom: 15px; font-family: inherit; width: 100%;
-            transition: color 1s;
+            font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+            cursor: pointer; margin-bottom: 10px; font-family: inherit; width: 100%;
+            touch-action: manipulation;
         }
 
         .volume-rail {
-            -webkit-appearance: none; width: 100%; height: 1px;
+            -webkit-appearance: none; width: 100%; height: 2px;
             background: rgba(255, 255, 255, 0.1); outline: none;
         }
         .volume-rail::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 8px; height: 8px; 
+            -webkit-appearance: none; width: 10px; height: 10px; 
             background: var(--primary); cursor: pointer; border-radius: 0;
-            transition: background 1s;
         }
 
         /* --- COMMAND ARRAY --- */
         .command-array {
-            margin-top: 35px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+            margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
         }
         .lux-btn {
             background: rgba(0,0,0,0.6); border: 1px solid var(--primary);
-            color: var(--primary); padding: 12px 28px; cursor: pointer;
-            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 4px;
-            transition: all 0.4s;
+            color: var(--primary); padding: 10px 20px; cursor: pointer;
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 3px;
+            transition: 0.4s; touch-action: manipulation; white-space: nowrap;
         }
         .lux-btn:hover { background: var(--primary-glow); }
 
+        /* THE CLOAK GAVEL */
         #cloak-btn {
-            position: fixed; top: 35px; right: 35px; z-index: 2000;
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
             background: none; border: 1px solid var(--primary);
-            color: var(--primary); padding: 10px 22px; cursor: pointer; 
-            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 5px;
-            backdrop-filter: blur(5px); transition: all 1s;
+            color: var(--primary); padding: 8px 16px; cursor: pointer; 
+            font-size: 0.55rem; text-transform: uppercase; letter-spacing: 3px;
+            backdrop-filter: blur(5px); transition: 0.3s;
+        }
+
+        /* MOBILE OVERRIDES */
+        @media (max-width: 800px) {
+            .mixer-vault { height: 92vh; padding: 20px; }
+            .mixer-grid { grid-template-columns: repeat(2, 1fr); }
+            .sound-card { padding: 12px; }
+            .lux-btn { flex: 1 1 45%; text-align: center; }
+            #cloak-btn { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.5rem; }
         }
     </style>
 </head>
-<body id="master-body" onclick="ghostRestore()">
+<body id="master-body" class="noir-mode" onclick="ghostRestore()">
 
     <button id="cloak-btn" onclick="toggleCloak(event)">CLOAK SYSTEM</button>
 
@@ -148,10 +154,10 @@
     <div id="glow-layer"></div>
 
     <div id="ui-viewport">
-        <div class="mixer-vault">
+        <div class="mixer-vault" onclick="event.stopPropagation()">
             <div class="mixer-header">
                 <h2>The Resonance</h2>
-                <span style="font-size: 0.55rem; opacity: 0.4; letter-spacing: 6px;">SOVEREIGN MIXER</span>
+                <span style="font-size: 0.45rem; opacity: 0.4; letter-spacing: 4px;">SOVEREIGN MIXER</span>
             </div>
             
             <div id="mixer-grid" class="mixer-grid"></div>
@@ -168,19 +174,29 @@
 
     <script>
         let activeSoundscapes = {};
+        let audioPrimed = false;
         const soundLibrary = [
             { id: "rain", name: "RAIN", url: "rain.mp3" }, { id: "thunder", name: "THUNDER", url: "thunder.mp3" },
-            { id: "winterwind", name: "WIND", url: "winterwind.mp3" }, { id: "waves", name: "WAVES", url: "waves.mp3" },
+            { id: "wind", name: "WIND", url: "winterwind.mp3" }, { id: "waves", name: "WAVES", url: "waves.mp3" },
             { id: "owls", name: "OWLS", url: "owls.mp3" }, { id: "raven", name: "RAVEN", url: "raven.mp3" },
             { id: "frogs", name: "FROGS", url: "frogs.mp3" }, { id: "crickets", name: "CRICKETS", url: "crickets.mp3" },
-            { id: "fire", name: "FIRE", url: "fire.mp3" }, { id: "simmering", name: "POT", url: "simmeringpot.mp3" },
-            { id: "teacup", name: "TEA", url: "teacup.mp3" }, { id: "clock", name: "CLOCK", url: "clock.mp3" },
-            { id: "cat", name: "CAT", url: "cat.mp3" }, { id: "windchimes", name: "CHIMES", url: "windchimes.mp3" },
-            { id: "musicbox1", name: "BOX I", url: "musicbox1.mp3" }, { id: "musicbox2", name: "BOX II", url: "musicbox2.mp3" },
-            { id: "musicbox3", name: "BOX III", url: "musicbox3.mp3" }, { id: "xmas1", name: "YULE I", url: "xmasmusicbox1.mp3" },
-            { id: "xmas2", name: "YULE II", url: "xmasmusicbox2.mp3" }, { id: "xmas3", name: "YULE III", url: "xmasmusicbox3.mp3" },
-            { id: "darkmusic", name: "DARK", url: "darkmusic1.mp3" }, { id: "binary", name: "BINARY", url: "binarymusicbox.mp3" }
+            { id: "fire", name: "FIRE", url: "fire.mp3" }, { id: "pot", name: "POT", url: "simmeringpot.mp3" },
+            { id: "tea", name: "TEA", url: "teacup.mp3" }, { id: "clock", name: "CLOCK", url: "clock.mp3" },
+            { id: "cat", name: "CAT", url: "cat.mp3" }, { id: "chimes", name: "CHIMES", url: "windchimes.mp3" },
+            { id: "box1", name: "BOX I", url: "musicbox1.mp3" }, { id: "box2", name: "BOX II", url: "musicbox2.mp3" },
+            { id: "box3", name: "BOX III", url: "musicbox3.mp3" }, { id: "yule1", name: "YULE I", url: "xmasmusicbox1.mp3" },
+            { id: "yule2", name: "YULE II", url: "xmasmusicbox2.mp3" }, { id: "yule3", name: "YULE III", url: "xmasmusicbox3.mp3" },
+            { id: "dark", name: "DARK", url: "darkmusic1.mp3" }, { id: "bin", name: "BINARY", url: "binarymusicbox.mp3" }
         ];
+
+        // --- KINETIC PRIMER (The Handshake) ---
+        function primeAudio() {
+            if (!audioPrimed) {
+                const silence = new Audio();
+                silence.play().then(() => { silence.pause(); audioPrimed = true; }).catch(e => {});
+            }
+        }
+        document.body.addEventListener('click', primeAudio, { once: true });
 
         function initGrid() {
             const grid = document.getElementById('mixer-grid');
@@ -194,32 +210,51 @@
         window.toggleTrack = function(id, url) {
             const card = document.getElementById(`card-${id}`);
             if (activeSoundscapes[id]) {
-                activeSoundscapes[id].pause(); delete activeSoundscapes[id]; card.classList.remove('active');
+                activeSoundscapes[id].pause();
+                delete activeSoundscapes[id];
+                card.classList.remove('active');
             } else {
-                const audio = new Audio(url); audio.loop = true; audio.volume = 0.5;
-                audio.play().then(() => { activeSoundscapes[id] = audio; card.classList.add('active'); if (navigator.vibrate) navigator.vibrate(15); });
+                const audio = new Audio(url);
+                audio.loop = true;
+                audio.volume = 0.5;
+                audio.play().then(() => {
+                    activeSoundscapes[id] = audio;
+                    card.classList.add('active');
+                    if (navigator.vibrate) navigator.vibrate(15);
+                }).catch(e => console.warn("Strike Required for Audio"));
             }
         };
 
         window.changeVolume = function(id, vol) { if (activeSoundscapes[id]) activeSoundscapes[id].volume = vol; };
+
         window.stopAll = function() {
-            Object.keys(activeSoundscapes).forEach(id => { activeSoundscapes[id].pause(); const card = document.getElementById(`card-${id}`); if (card) card.classList.remove('active'); });
+            Object.keys(activeSoundscapes).forEach(id => {
+                activeSoundscapes[id].pause();
+                const card = document.getElementById(`card-${id}`);
+                if (card) card.classList.remove('active');
+            });
             activeSoundscapes = {};
         };
 
         function toggleCloak(e) {
-            e.stopPropagation(); const viewport = document.getElementById('ui-viewport'); const isCloaked = viewport.classList.toggle('cloaked');
+            e.stopPropagation();
+            const viewport = document.getElementById('ui-viewport');
+            const isCloaked = viewport.classList.toggle('cloaked');
             document.getElementById('cloak-btn').innerText = isCloaked ? "RESTORE SYSTEM" : "CLOAK SYSTEM";
         }
 
         function ghostRestore() {
-            const viewport = document.getElementById('ui-viewport'); if (viewport.classList.contains('cloaked')) { viewport.classList.remove('cloaked'); document.getElementById('cloak-btn').innerText = "CLOAK SYSTEM"; }
+            const viewport = document.getElementById('ui-viewport');
+            if (viewport.classList.contains('cloaked')) {
+                viewport.classList.remove('cloaked');
+                document.getElementById('cloak-btn').innerText = "CLOAK SYSTEM";
+            }
         }
 
         function jolt(palette) {
             const body = document.getElementById('master-body');
             body.classList.remove('noir-mode', 'lunar-mode', 'vellum-mode', 'amethyst-mode');
-            if (palette !== 'default') body.classList.add(`${palette}-mode`);
+            body.classList.add(`${palette}-mode`);
             if (navigator.vibrate) navigator.vibrate(20);
         }
 
