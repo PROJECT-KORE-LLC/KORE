@@ -10,7 +10,37 @@
   The GNU General Public License is a free, copyleft license for
 software and other kinds of works.
 
-  The licenses for most software and other practical works are designed
+  The licenses for most software and other practical works a# PROPRIETARY AND CONFIDENTIAL LICENSE
+# PROJECT KORE LLC | ENEE-S1-CORE
+
+Copyright (c) 2026 Project Kore LLC. All Rights Reserved.
+
+1. PROPRIETARY NATURE
+This software, including all logic, somatic entropy algorithms (Jitter Salt), 
+and the ENEE Standard (collectively, the "Software"), is the exclusive 
+intellectual property of Project Kore LLC. 
+
+2. RESTRICTIONS
+Unauthorized copying, modification, distribution, public display, or 
+reverse engineering of this Software, in part or in whole, is strictly 
+prohibited. This Software is NOT open-source. Access to this repository 
+does not constitute a license for use.
+
+3. FORENSIC INTEGRITY & NATIONAL SECURITY
+This repository serves as a Hardened Forensic Silo. In alignment with the 
+National Security Telecommunications Memorandum (NSTM-4), this Software is 
+classified as a protected American digital asset. Any unauthorized 
+"distillation," scraping, or cloning by foreign or domestic entities will 
+be documented and reported to the Cybersecurity and Infrastructure Security 
+Agency (CISA) and the FBI Cyber Division.
+
+4. LICENSING ENQUIRIES
+Commercial B2B licensing or Government Purpose Rights (GPR) are only 
+available through formal written contract with Project Kore LLC. 
+
+---
+NOTICE: This logic contains embedded forensic markers. Unauthorized 
+distribution triggers a documented industrial security breach report.re designed
 to take away your freedom to share and change the works.  By contrast,
 the GNU General Public License is intended to guarantee your freedom to
 share and change all versions of a program--to make sure it remains free
