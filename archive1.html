@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PROJECT KORE // THE ARCHIVE // V5.1 //</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="thumbnail1.jpg">
+    <link rel="icon" type="image/jpeg" href="thumbnail1.jpg">
+
     <style>
         :root {
             --primary: #D4AF37; 
@@ -14,7 +19,6 @@
             --unison-ease: cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
 
-        /* --- VANGUARD PALETTE ARRAY --- */
         .noir-mode { --primary: #D4AF37; --hijack-glow: rgba(229, 149, 0, 0.7); }
         .lunar-mode { --primary: #A5F2F3; --hijack-glow: rgba(0, 150, 255, 0.6); }
         .vellum-mode { --primary: #C2B280; --hijack-glow: rgba(101, 67, 33, 0.6); }
@@ -27,7 +31,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- SYNCED SOMATIC ENGINE --- */
         #bg-anchor {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #1a1a25 0%, #020204 100%);
@@ -49,8 +52,7 @@
         #ui-viewport {
             position: relative; z-index: 100; height: 100vh; width: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px; padding-top: 80px; /* Deadzone for Top Satellite */
-            box-sizing: border-box; transition: opacity 0.8s;
+            padding: 20px; padding-top: 80px; box-sizing: border-box; transition: opacity 0.8s;
         }
         .cloaked { opacity: 0 !important; pointer-events: none !important; }
 
@@ -82,32 +84,21 @@
 
         .lore-input { background: rgba(0,0,0,0.6); border: none; border-left: 4px solid var(--primary); color: var(--primary); padding: 15px; outline: none; resize: none; font-family: monospace; font-size: 1rem; }
 
-        /* --- COMMAND ARRAY --- */
         .command-array { margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap; width: 100%; max-width: 950px; }
         .lux-btn { background: rgba(0,0,0,0.7); border: 1px solid var(--primary); color: var(--primary); padding: 12px; cursor: pointer; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; flex: 1; text-align: center; transition: 0.4s; }
         .lux-btn:hover { background: var(--primary-glow); box-shadow: 0 0 25px var(--primary-glow); }
 
         .kore-footer { margin-top: 25px; font-size: 0.55rem; opacity: 0.4; letter-spacing: 6px; text-transform: uppercase; text-align: center; width: 100%; }
 
-        /* --- CLOAK BUTTON (TOP LEFT SATELLITE) --- */
         #cloak-btn { position: fixed; top: 25px; left: 25px; z-index: 2000; background: rgba(0,0,0,0.8); border: 1px solid var(--primary); color: var(--primary); padding: 10px 18px; font-size: 0.6rem; letter-spacing: 4px; backdrop-filter: blur(5px); cursor: pointer; transition: all 0.3s; }
         #cloak-btn:hover { background: var(--primary-glow); }
 
-        /* --- RESPONSIVE STABILIZATION --- */
         @media (max-width: 600px) {
             #ui-viewport { padding-top: 70px; }
             .archive-vault { padding: 20px; height: 65vh; }
             .vault-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             #search-annals { width: 100%; box-sizing: border-box; }
             #cloak-btn { top: 15px; left: 15px; padding: 8px 14px; font-size: 0.5rem; }
-        }
-
-        @media (max-height: 500px) and (orientation: landscape) {
-            #ui-viewport { padding-top: 50px; }
-            .archive-vault { height: 75vh; padding: 15px 25px; gap: 10px; }
-            .vault-header h2 { font-size: 1rem; letter-spacing: 6px; }
-            .command-array { margin-top: 10px; gap: 6px; }
-            #cloak-btn { top: 10px; left: 10px; }
         }
     </style>
 </head>
@@ -152,11 +143,13 @@
             archive = JSON.parse(localStorage.getItem('kore_archive')) || [];
         } catch(e) { archive = []; }
 
-        // Hard-locked audio node
         const waves = document.getElementById('waves-atmosphere');
         let atmosphereInitialized = false;
 
-        window.onload = () => renderAnnals();
+        window.onload = () => {
+            renderAnnals();
+            if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+        };
 
         function renderAnnals() {
             const query = document.getElementById('search-annals').value.toLowerCase();
@@ -180,7 +173,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // Logic Strike: Enter to commit
         document.getElementById('lore-editor').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -191,10 +183,8 @@
         function commitLore() {
             const input = document.getElementById('lore-editor');
             if (input.value.trim() === "") return;
-
             const now = new Date();
             const timestamp = now.toLocaleDateString() + " // " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
             archive.push({ text: input.value, timestamp: timestamp });
             localStorage.setItem('kore_archive', JSON.stringify(archive));
             input.value = "";
@@ -217,7 +207,6 @@
 
         function playAtmosphere() {
             if(!atmosphereInitialized) {
-                // Audio path now hard-locked to corrected element
                 waves.volume = 0.3;
                 waves.play().then(() => { atmosphereInitialized = true; }).catch(() => {});
             }
